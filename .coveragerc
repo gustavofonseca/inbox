@@ -1,0 +1,5 @@
+[run]
+include = penne_core/*
+omit = *migrations*, *tests*
+plugins =
+    django_coverage_plugin
