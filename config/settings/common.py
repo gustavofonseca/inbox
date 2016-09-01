@@ -45,7 +45,7 @@ THIRD_PARTY_APPS = (
 LOCAL_APPS = (
     # custom users app
     'penne_core.users.apps.UsersConfig',
-    # Your stuff: custom apps go here
+    'frontdesk',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
