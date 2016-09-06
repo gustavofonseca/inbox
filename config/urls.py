@@ -20,7 +20,7 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
 
     # Your stuff: custom urls includes go here
-    url(r'frontdesk/', include('frontdesk.urls')),
+    url(r'frontdesk/', include('frontdesk.urls', namespace='frontdesk')),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

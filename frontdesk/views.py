@@ -1,12 +1,19 @@
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render
+from django.shortcuts import (
+        render,
+        get_object_or_404,
+)
 from django.http import (
         JsonResponse,
         HttpResponseBadRequest,
         HttpResponseNotAllowed,
 )
 
-from . import transactions, forms
+from . import (
+        transactions,
+        forms,
+        models,
+)
 
 
 @csrf_exempt
@@ -28,7 +35,14 @@ def deposit_package(request):
 
 
 def deposit_dashboard(request):
+    show_deposit = request.GET.get('show', None)
 
-    context = {}
+    deposits = models.Deposit.objects.order_by('-created')[:10]
+    if show_deposit:
+        detailed_deposit = get_object_or_404(models.Deposit, pk=show_deposit)
+    else:
+        detailed_deposit = models.Deposit.objects.order_by('-created').first()
 
+    context = {'deposits': deposits, 'detailed_deposit': detailed_deposit}
     return render(request, 'frontdesk/dashboard.html', context)
+
