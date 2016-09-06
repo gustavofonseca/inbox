@@ -1,7 +1,9 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
+from django.template import loader
 from django.http import (
         JsonResponse,
+        HttpResponse,
         HttpResponseBadRequest,
         HttpResponseNotAllowed,
 )
@@ -24,3 +26,10 @@ def deposit_package(request):
     else:
         return HttpResponseBadRequest()
 
+
+@csrf_exempt
+def deposit_dashboard(request):
+
+    template = loader.get_template('frontdesk/dashboard.html')
+
+    return HttpResponse(template.render({}, request))
