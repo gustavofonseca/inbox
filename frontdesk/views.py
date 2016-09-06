@@ -16,11 +16,19 @@ def deposit_package(request):
 
     form = forms.DepositForm(request.POST, request.FILES)
     if form.is_valid():
-        deposit_id = transactions.deposit_package(request.FILES['package'],
-                request.POST['md5_sum'])
+        deposit_id = transactions.deposit_package(
+            request.FILES['package'],
+            request.POST['md5_sum']
+        )
 
         return JsonResponse({'deposit_id': deposit_id})
 
     else:
         return HttpResponseBadRequest()
 
+
+def deposit_dashboard(request):
+
+    context = {}
+
+    return render(request, 'frontdesk/dashboard.html', context)
