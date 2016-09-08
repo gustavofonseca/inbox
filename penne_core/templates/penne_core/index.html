@@ -1,3 +1,4 @@
+{% load humanize %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -113,7 +114,14 @@
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu">
         <li class="header">DEPOSITS</li>
-        <li><a href="index.html"><i class="fa fa-circle-o text-aqua"></i>#230 - 22, janeiro 2016</a></li>
+        {% for deposit in deposits %}
+        <li>
+        <a href="/?show={{ deposit.pk }}"><i class="fa fa-circle-o text-aqua"></i>#{{ deposit.pk }} - {{ deposit.created|naturaltime }}</a>
+        </li>
+        {% endfor %}
+        <li>
+          <a href="index.html"><i class="fa fa-circle-o text-aqua"></i>#230 - 22, janeiro 2016</a>
+        </li>
         <li class="active"><a href="index.html"><i class="fa fa-circle-o text-green"></i>#229 - 21, janeiro 2016</a></li>
         <li><a href="index.html"><i class="fa fa-circle-o text-red"></i>#228 - 20, janeiro 2016</a></li>
       </ul>
@@ -126,18 +134,28 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Deposit (#299)
+        Deposit (#{{ detailed_deposit.pk }})
       </h1>
     </section>
 
     <!-- Main content -->
     <section class="content">
         <div class="info-box">
+        {% if detailed_deposit.status == 'deposited' %}
+          <span class="info-box-icon bg-blue"><i class="fa fa-inbox"></i></span>
+        {% elif detailed_deposit.status == 'rejected' %} 
+          <span class="info-box-icon bg-red"><i class="fa fa-thumbs-o-down"></i></span>
+        {% else %}
           <span class="info-box-icon bg-green"><i class="fa fa-thumbs-o-up"></i></span>
+        {% endif %}
+
           <div class="info-box-content">
-            <span class="info-box-number">(#299) 1807-8672_asas_38_2_40.zip</span>
-            <div><b>MD5 Sum:</b> 8913jhdiuh37y489fc3h02j92r3u3089fu380fu38yfw9ywe7io7w</div>
-            <div><b>depositado em:</b> 22 de janeiro de 2016 por <b>Cabo Verde</b></div>            
+              <span class="info-box-number">
+                {{ detailed_deposit.package.file.name }}
+                <a href="{{ detailed_deposit.package.file.url }}"><i class="fa fa-cloud-download"></i>Download</a>
+              </span>
+              <div><b>MD5 Sum:</b> {{ detailed_deposit.package.md5_sum }}</div>
+              <div><b>Depositado em:</b> {{ detailed_deposit.created }}</div>            
           </div>
           <!-- /.info-box-content -->
         </div>

@@ -4,6 +4,5 @@ from . import views
 
 
 urlpatterns = [
-        url(r'^deposit/$', views.deposit_package),
-        url(r'^dashboard/$', views.deposit_dashboard),
+        url(r'^deposits/$', views.deposit_package, name='deposits'),
 ]
