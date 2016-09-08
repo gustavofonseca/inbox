@@ -1,8 +1,4 @@
 import hashlib
-import threading
-
-
-_CHECKSUM_FILE_LOCK = threading.Lock()
 
 
 def checksum_file(file, algorithm=hashlib.md5):
@@ -39,11 +35,10 @@ def safe_checksum_file(file, algorithm=hashlib.md5):
     if not file.seekable():
         raise TypeError('Object "file" does not support random access.')
 
-    with _CHECKSUM_FILE_LOCK:
-        former_offset = file.tell()
-        try:
-            return checksum_file(file, algorithm=algorithm)
+    former_offset = file.tell()
+    try:
+        return checksum_file(file, algorithm=algorithm)
 
-        finally:
-            file.seek(former_offset)
+    finally:
+        file.seek(former_offset)
 

@@ -116,7 +116,7 @@
         <li class="header">DEPOSITS</li>
         {% for deposit in deposits %}
         <li>
-        <a href="{{ deposit.get_absolute_url }}"><i class="fa fa-circle-o text-aqua"></i>#{{deposit.pk}} - {{deposit.created|naturaltime}}</a>
+        <a href="/?show={{ deposit.pk }}"><i class="fa fa-circle-o text-aqua"></i>#{{ deposit.pk }} - {{ deposit.created|naturaltime }}</a>
         </li>
         {% endfor %}
         <li>

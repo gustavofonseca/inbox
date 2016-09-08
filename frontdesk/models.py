@@ -25,9 +25,6 @@ class Deposit(TimeStampedModel):
     status = StatusField()
     status_changed = MonitorField(monitor='status')
 
-    def get_absolute_url(self):
-        return reverse('frontdesk:deposit', args=[self.pk])
-
 
 class Package(TimeStampedModel):
     """Pacote depositado para inclusão na coleção.
