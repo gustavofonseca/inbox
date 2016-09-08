@@ -26,8 +26,11 @@ def deposit_package(file, md5_sum):
     :param file: Instância de ``django.core.files.base.File``.
     :param md5_sum: String de texto contendo a soma md5 de ``file``.
     """
-    if md5_sum != utils.safe_checksum_file(file):
-        raise ChecksumError()
+    # levanta TypeError se ``file`` não suportar acesso aleatório.
+    actual_md5_sum = utils.safe_checksum_file(file)
+    if md5_sum != actual_md5_sum:
+        raise ChecksumError('Expecting "%s", but got "%s".',
+                md5_sum, actual_md5_sum)
 
     deposit = models.Deposit.objects.create()
     package = models.Package.objects.create(
