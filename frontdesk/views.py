@@ -1,3 +1,5 @@
+import logging
+
 from django.views.decorators.csrf import csrf_exempt
 from django.http import (
         JsonResponse,
@@ -12,6 +14,9 @@ from . import (
 )
 
 
+LOGGER = logging.getLogger(__name__)
+
+
 @csrf_exempt
 def deposit_package(request):
     if request.method != 'POST':
@@ -21,8 +26,8 @@ def deposit_package(request):
     if form.is_valid():
         try:
             deposit_id = transactions.deposit_package(
-                request.FILES['package'],
-                request.POST['md5_sum'])
+                form.cleaned_data['package'],
+                form.cleaned_data['md5_sum'])
 
         except transactions.ChecksumError as exc:
             LOGGER.exception(exc)
