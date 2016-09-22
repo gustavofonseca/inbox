@@ -1,9 +1,14 @@
+import celery
 from django.db import models
+from django.db.models.signals import post_save
 from django.urls import reverse
+from django.dispatch import receiver
 
 from model_utils.models import TimeStampedModel
 from model_utils.fields import StatusField, MonitorField
 from model_utils import Choices
+
+from packtools import utils as packtools_utils
 
 
 class Deposit(TimeStampedModel):
@@ -45,4 +50,34 @@ class Package(TimeStampedModel):
             related_name='package')
     file = models.FileField(upload_to='packages/%Y/%m/%d/', max_length=1024)
     md5_sum = models.CharField(max_length=32)  # 32 dígitos hexadecimais
+
+
+class PackageMember(models.Model):
+    """Arquivo membro de ``Package``.
+    """
+    package = models.ForeignKey(Package, on_delete=models.CASCADE,
+            related_name='members')
+    name = models.CharField(max_length=1024)
+
+    def open(self):
+        """Extrai o membro como um objeto tipo arquivo -- instância de
+        ``zipfile.ZipExtFile``.
+
+        Deve ser utilizado preferencialmente com gerenciador de contexto, e.g.:
+
+            with package_member.open() as member_file:
+                data = member_file.read()
+        """
+        with packtools_utils.Xray.fromfile(self.package.file.path) as xpack:
+            return xpack.get_file(self.name)
+
+
+@receiver(post_save, sender=Package)
+def create_package_members(sender, instance, created, **kwargs):
+    """Cria as entidades de representam cada arquivo membro de ``Package``.
+    """
+    if created:
+        celery.current_app.send_task(
+                'frontdesk.tasks.create_package_members',
+                args=[instance.pk])
 
