@@ -247,3 +247,7 @@ ADMIN_URL = r'^admin/'
 
 
 # Your common stuff: Below this line define 3rd party library settings
+# ClamAV Antivirus
+CLAMAV_HOST = env('CLAMAV_HOST', default='127.0.0.1')
+CLAMAV_PORT = env.int('CLAMAV_PORT', default=3310)
+

@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='deposit',
             name='depositor',
-            field=models.CharField(default='gn1', max_length=16),
+            field=models.CharField(default='#undefined#', max_length=16),
             preserve_default=False,
         ),
     ]
