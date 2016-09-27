@@ -51,6 +51,6 @@ celery==3.1.23
 
 
 # Your custom requirements go here
-packtools==1.3dev_20160916
+packtools==1.3dev20160927
 pyclamd==0.3.17
 
