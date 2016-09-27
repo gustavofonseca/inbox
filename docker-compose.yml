@@ -44,6 +44,7 @@ services:
     depends_on:
      - postgres
      - redis
+     - clamav
     command: celery -A penne_core.taskapp worker -l INFO
 
   celerybeat:
@@ -55,5 +56,11 @@ services:
     depends_on:
       - postgres
       - redis
+      - clamav
     command: celery -A penne_core.taskapp beat -l INFO
+
+  clamav:
+    build: ./compose/clamav
+    ports:
+      - "3310:3310"
 
