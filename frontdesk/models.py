@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.urls import reverse
 from django.dispatch import receiver
+from django.contrib.postgres.fields import JSONField
 
 from model_utils.models import TimeStampedModel
 from model_utils.fields import StatusField, MonitorField
@@ -15,6 +16,9 @@ PACKAGE_VIRUSSCAN_STATUS_QUEUED = 'queued'
 PACKAGE_VIRUSSCAN_STATUS_UNDETERMINED = 'undetermined'
 PACKAGE_VIRUSSCAN_STATUS_INFECTED = 'infected'
 PACKAGE_VIRUSSCAN_STATUS_UNINFECTED = 'uninfected'
+
+XMLMEMBER_SPS_STATUS_VALID = 'valid'
+XMLMEMBER_SPS_STATUS_INVALID = 'invalid'
 
 
 class Deposit(TimeStampedModel):
@@ -88,6 +92,7 @@ class PackageMember(models.Model):
             related_name='members')
     name = models.CharField(max_length=1024)
 
+
     def open(self):
         """Extrai o membro como um objeto tipo arquivo -- instância de
         ``zipfile.ZipExtFile``.
@@ -100,6 +105,26 @@ class PackageMember(models.Model):
         with packtools_utils.Xray.fromfile(self.package.file.path) as xpack:
             return xpack.get_file(self.name)
 
+    def __str__(self):
+        return self.name
+
+    def is_xml(self):
+        return self.name.endswith('.xml')
+
+
+class XMLMemberControlAttrs(models.Model):
+    """Atributos de controle para ``PackageMember`` do tipo XML.
+    """
+    member = models.OneToOneField(PackageMember, on_delete=models.CASCADE,
+            related_name='xml_control_attrs')
+
+    SPS_CHECK_STATUS = Choices(
+            XMLMEMBER_SPS_STATUS_VALID,
+            XMLMEMBER_SPS_STATUS_INVALID)
+    sps_check_status = StatusField(choices_name='SPS_CHECK_STATUS')
+    sps_check_status_changed = MonitorField(monitor='sps_check_status')
+    sps_check_details = JSONField()
+
 
 @receiver(post_save, sender=Package)
 def create_package_members(sender, instance, created, **kwargs):
@@ -110,6 +135,7 @@ def create_package_members(sender, instance, created, **kwargs):
                 'frontdesk.tasks.create_package_members',
                 args=[instance.pk])
 
+
 @receiver(post_save, sender=Package)
 def scan_package_for_viruses(sender, instance, created, **kwargs):
     """Varre o arquivo referenciado por ``Package.file`` em busca de vírus.
@@ -117,5 +143,15 @@ def scan_package_for_viruses(sender, instance, created, **kwargs):
     if created:
         celery.current_app.send_task(
                 'frontdesk.tasks.scan_package_for_viruses',
+                args=[instance.pk])
+
+
+@receiver(post_save, sender=PackageMember)
+def validate_package_member_against_sps(sender, instance, created, **kwargs):
+    """Valida XMLs contra a SciELO PS.
+    """
+    if created and instance.is_xml():
+        celery.current_app.send_task(
+                'frontdesk.tasks.validate_package_member',
                 args=[instance.pk])
 
