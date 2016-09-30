@@ -19,8 +19,12 @@
         </span>
         <div class="info-box-content">
             <span class="info-box-number">
-              {{ detailed_deposit.package.file.name }}
-              <a href="{{ detailed_deposit.package.file.url }}"><i class="fa fa-cloud-download"></i>Download</a>
+              {{ detailed_deposit.package.file.name }} (
+              {% if detailed_deposit.package.virus_scan_status != 'infected' %}
+                <a href="{{ detailed_deposit.package.file.url }}"><i class="fa fa-cloud-download"></i>Download</a>
+              {% else %}
+                <i class="fa fa-cloud-download"></i> Download indisponível, pacote com virus.
+              {% endif %})
             </span>
             <div><b>MD5 Sum:</b> {{ detailed_deposit.package.md5_sum }}</div>
             <div><b>Depositado em:</b> {{ detailed_deposit.created }} <b>por</b> {{ detailed_deposit.depositor }}</div>
@@ -31,21 +35,80 @@
   </div>
   <div class="row">
     <div class="col-md-4 col-sm-8 col-xs-16">
-      <div class="info-box bg-{{ detailed_deposit.package.virus_scan_status|status_color }}">
-        <span class="info-box-icon"><i class="fa fa-bug"></i></span>
-        <div class="info-box-content">
-          <span class="info-box-text">Anti-virus</span>
-          <span class="info-box-number">{{ detailed_deposit.package.virus_scan_status }}</span>
-          <div class="progress">
-            <div class="progress-bar" style="width: 100%"></div>
-          </div>
-          <span class="progress-description">
+      <div class="small-box bg-{{ detailed_deposit.package.virus_scan_status|status_color }}">
+        <div class="inner">
+          <h3>Anti-virus</h3>
+          <h4>{{ detailed_deposit.package.virus_scan_status }}</h4>
+          <h5>
             Verificado em: {{ detailed_deposit.package.virus_scan_status_changed }}
-          </span>
+          </h5>
         </div>
+        <div class="icon"><i class="fa fa-bug"></i></div>
+        <a class="small-box-footer" href="#" data-toggle="modal" data-target="#AntiVirusModal">
+          info
+          <i class="fa fa-arrow-circle-right"></i>
+        </a>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-8 col-xs-16">
+      <div class="small-box bg-blue">
+        <div class="inner">
+          <h3>Integrity</h3>
+          <h4>erros encontrados</h4>
+          <h5>
+            Verificado em: Sept. 28, 2016, 5:07 p.m. 
+          </h5>
+        </div>
+        <div class="icon"><i class="fa fa-circle-thin"></i></div>
+        <a class="small-box-footer" href="#" data-toggle="modal" data-target="#AntiVirusModal">
+          info
+          <i class="fa fa-arrow-circle-right"></i>
+        </a>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-8 col-xs-16">
+      <div class="small-box bg-red">
+        <div class="inner">
+          <h3>SciELO PS</h3>
+          <h4><b>3 xml's válidos</b> e <b>2 xml's invalidos</b></h4>
+          <h5>
+            Verificado em: Sept. 28, 2016, 5:07 p.m. 
+          </h5>
+        </div>
+        <div class="icon"><i class="fa fa-code"></i></div>
+        <a class="small-box-footer" href="#" data-toggle="modal" data-target="#AntiVirusModal">
+          info
+          <i class="fa fa-arrow-circle-right"></i>
+        </a>
       </div>
     </div>
   </div>
-  <rh>
 </section>
+
 {% endblock content %}
+
+{% block modal %}
+  <div class="modal" id="AntiVirusModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span></button>
+          <h4 class="modal-title">Relatório de Anti-virus</h4>
+        </div>
+        <div class="modal-body">
+          <p>{{ detailed_deposit.package.virus_scan_details }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+{% endblock modal %}
+
+{% block javascript %}
+
+{% endblock javascript %}

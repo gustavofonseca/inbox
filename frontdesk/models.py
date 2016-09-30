@@ -154,4 +154,3 @@ def validate_package_member_against_sps(sender, instance, created, **kwargs):
         celery.current_app.send_task(
                 'frontdesk.tasks.validate_package_member',
                 args=[instance.pk])
-
