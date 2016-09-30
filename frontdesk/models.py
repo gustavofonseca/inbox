@@ -111,6 +111,27 @@ class PackageMember(models.Model):
     def is_xml(self):
         return self.name.endswith('.xml')
 
+    def sps_validation_status(self):
+        """O resultado da validação do membro contra a SciELO PS.
+
+        Retorna uma tupla na forma: Tuple[bool, dict], onde o primeiro item
+        indica se o documento é valido, e o segundo os detalhes da validação.
+        A execução desse método em instâncias que não representam documentos
+        XML ou em instâncias de documentos XML que ainda não foram submetidas
+        a validação retornará uma tupla na forma: Tuple[None, dict].
+        """
+        try:
+            xmlattrs = self.xml_control_attrs
+        except XMLMemberControlAttrs.DoesNotExist:
+            return (None, {})
+        else:
+            if XMLMEMBER_SPS_STATUS_VALID == xmlattrs.sps_check_status:
+                is_valid = True
+            else:
+                is_valid = False
+
+            return (is_valid, xmlattrs.sps_check_details)
+
 
 class XMLMemberControlAttrs(models.Model):
     """Atributos de controle para ``PackageMember`` do tipo XML.
