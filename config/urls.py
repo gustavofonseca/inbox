@@ -11,7 +11,11 @@ from penne_core import views as pc_views  # views em nível de projeto
 
 
 urlpatterns = [
-    url(r'^$', pc_views.package_report, name='package_report'),
+    url(r'^$', pc_views.index, name='index'),
+    url(r'^(?P<deposit_id>[0-9]+)/$', pc_views.package_report, name='package_report'),
+    url(r'^(?P<deposit_id>[0-9]+)/reports/virus/', pc_views.package_report_virus, name='package_report_virus'),
+    url(r'^(?P<deposit_id>[0-9]+)/reports/integrity/', pc_views.package_report_integrity, name='package_report_integrity'),
+    url(r'^(?P<deposit_id>[0-9]+)/reports/scielops/', pc_views.package_report_scielops, name='package_report_scielops'),
 
     # Django Admin, use {% url 'admin:index' %}
     url(settings.ADMIN_URL, include(admin.site.urls)),

@@ -1,0 +1,10 @@
+{% extends "penne_core/package_report.html" %}
+
+{% block reports_content %}
+<h3 class="modal-title">Relatório de Anti-virus</h3>
+{% if detailed_deposit.package.virus_scan_details %}
+    <p>{{ detailed_deposit.package.virus_scan_details }}</p>
+{% else %}
+    <p>Virus não encontrado</p>
+{% endif %}
+{% endblock reports_content %}

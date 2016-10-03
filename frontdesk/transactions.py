@@ -27,6 +27,7 @@ def deposit_package(file, md5_sum, depositor):
     :param md5_sum: String de texto contendo a soma md5 de ``file``.
     """
     # levanta TypeError se ``file`` não suportar acesso aleatório.
+
     actual_md5_sum = utils.safe_checksum_file(file)
     if md5_sum != actual_md5_sum:
         raise ChecksumError('Expecting "%s", but got "%s".',
