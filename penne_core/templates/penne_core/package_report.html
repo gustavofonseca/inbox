@@ -34,6 +34,16 @@
     </div>
   </div>
   <div class="row">
+    <div class="col-md-12 col-sm-24 col-xs-36">
+      <h3>Conteúdo do pacote</h3>
+      <ul>
+        {% for member in detailed_deposit.package.members.all %}
+        <li>{{ member.name }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="row">
     <div class="col-md-4 col-sm-8 col-xs-16">
       <div class="small-box bg-{{ detailed_deposit.package.virus_scan_status|status_color }}">
         <div class="inner">
