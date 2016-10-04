@@ -84,6 +84,25 @@ class Package(TimeStampedModel):
                   PACKAGE_VIRUSSCAN_STATUS_UNINFECTED])
     virus_scan_details = models.CharField(max_length=2048, default='')
 
+    @property
+    def xml_stats(self):
+
+        stats = {
+            'xml_valid': 0, 'xml_invalid': 0, 'xml_total': 0
+        }
+
+        for member in self.members.all():
+            if not member.is_xml():
+                continue
+
+            stats['xml_total'] += 1
+            if member.sps_validation_status()[0]:
+                stats['xml_valid'] += 1
+            else:
+                stats['xml_invalid'] += 1
+
+        return stats
+
 
 class PackageMember(models.Model):
     """Arquivo membro de ``Package``.
@@ -91,7 +110,6 @@ class PackageMember(models.Model):
     package = models.ForeignKey(Package, on_delete=models.CASCADE,
             related_name='members')
     name = models.CharField(max_length=1024)
-
 
     def open(self):
         """Extrai o membro como um objeto tipo arquivo -- instância de
@@ -175,4 +193,3 @@ def validate_package_member_against_sps(sender, instance, created, **kwargs):
         celery.current_app.send_task(
                 'frontdesk.tasks.validate_package_member',
                 args=[instance.pk])
-

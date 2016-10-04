@@ -4,12 +4,12 @@ from django.template.defaultfilters import stringfilter
 register = template.Library()
 
 STATUS_COLORS = {
-    'default': 'aqua',
-    'queued': 'aqua',
-    'undetermined': 'aqua',
+    'default': 'blue',
+    'queued': 'blue',
+    'undetermined': 'blue',
     'infected': 'red',
     'uninfected': 'green',
-    'deposited': 'aqua',
+    'deposited': 'blue',
     'rejected': 'red',
     'accepted': 'green'
 }

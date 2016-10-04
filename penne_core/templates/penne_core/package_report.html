@@ -6,7 +6,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <h1>
-    Deposit (#{{ detailed_deposit.pk }})
+    Depósito (#{{ detailed_deposit.pk }})
   </h1>
 </section>
 <!-- Main content -->
@@ -19,8 +19,12 @@
         </span>
         <div class="info-box-content">
             <span class="info-box-number">
-              {{ detailed_deposit.package.file.name }}
-              <a href="{{ detailed_deposit.package.file.url }}"><i class="fa fa-cloud-download"></i>Download</a>
+              {{ detailed_deposit.package.file.name }} (
+              {% if detailed_deposit.package.virus_scan_status != 'infected' %}
+                <a href="{{ detailed_deposit.package.file.url }}"><i class="fa fa-cloud-download"></i>Download</a>
+              {% else %}
+                <i class="fa fa-cloud-download"></i> Download indisponível, pacote com virus.
+              {% endif %})
             </span>
             <div><b>MD5 Sum:</b> {{ detailed_deposit.package.md5_sum }}</div>
             <div><b>Depositado em:</b> {{ detailed_deposit.created }} <b>por</b> {{ detailed_deposit.depositor }}</div>
@@ -31,21 +35,62 @@
   </div>
   <div class="row">
     <div class="col-md-4 col-sm-8 col-xs-16">
-      <div class="info-box bg-{{ detailed_deposit.package.virus_scan_status|status_color }}">
-        <span class="info-box-icon"><i class="fa fa-bug"></i></span>
-        <div class="info-box-content">
-          <span class="info-box-text">Anti-virus</span>
-          <span class="info-box-number">{{ detailed_deposit.package.virus_scan_status }}</span>
-          <div class="progress">
-            <div class="progress-bar" style="width: 100%"></div>
-          </div>
-          <span class="progress-description">
+      <div class="small-box bg-{{ detailed_deposit.package.virus_scan_status|status_color }}">
+        <div class="inner">
+          <h3>Anti-virus</h3>
+          <h4>{{ detailed_deposit.package.virus_scan_status }}</h4>
+          <h5>
             Verificado em: {{ detailed_deposit.package.virus_scan_status_changed }}
-          </span>
+          </h5>
         </div>
+        <div class="icon"><i class="fa fa-bug"></i></div>
+        <a class="small-box-footer" href="{% url 'package_report_virus' detailed_deposit.pk %}">
+          info
+          <i class="fa fa-arrow-circle-right"></i>
+        </a>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-8 col-xs-16">
+      <div class="small-box bg-blue">
+        <div class="inner">
+          <h3>Integridade</h3>
+          <h4>erros encontrados</h4>
+          <h5>
+            Verificado em: Sept. 28, 2016, 5:07 p.m. 
+          </h5>
+        </div>
+        <div class="icon"><i class="fa fa-circle-thin"></i></div>
+        <a class="small-box-footer" href="{% url 'package_report_integrity' detailed_deposit.pk %}">
+          info
+          <i class="fa fa-arrow-circle-right"></i>
+        </a>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-8 col-xs-16">
+      <div class="small-box bg-{% if detailed_deposit.package.xml_stats.xml_invalid > 0 %}red {% else %}green{% endif %}">
+        <div class="inner">
+          <h3>SciELO PS</h3>
+          <h4><b>{{ detailed_deposit.package.xml_stats.xml_valid }} xml's válidos</b> e <b>{{ detailed_deposit.package.xml_stats.xml_invalid }} xml's inválidos</b></h4>
+          <h5>
+            Verificado em: Sept. 28, 2016, 5:07 p.m. 
+          </h5>
+        </div>
+        <div class="icon"><i class="fa fa-code"></i></div>
+        <a class="small-box-footer" href="{% url 'package_report_scielops' detailed_deposit.pk %}">
+          info
+          <i class="fa fa-arrow-circle-right"></i>
+        </a>
       </div>
     </div>
   </div>
-  <rh>
+  <div class="row">
+    <div class="col-md-12 col-sm-24 col-xs-36">
+      {% block reports_content %} {% endblock reports_content %}
+    </div>
+  </div>
 </section>
 {% endblock content %}
+
+{% block javascript %}
+
+{% endblock javascript %}

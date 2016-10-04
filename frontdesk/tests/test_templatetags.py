@@ -56,7 +56,7 @@ class TemplatetagsTest(TestCase):
 
         rendered = template.render(Context({'status': 'deposited'}))
 
-        self.assertIn('aqua', rendered)
+        self.assertIn('blue', rendered)
 
     def test_status_color_queued(self):
 
@@ -65,7 +65,7 @@ class TemplatetagsTest(TestCase):
 
         rendered = template.render(Context({'status': 'queued'}))
 
-        self.assertIn('aqua', rendered)
+        self.assertIn('blue', rendered)
 
     def test_status_color_accepted(self):
 
