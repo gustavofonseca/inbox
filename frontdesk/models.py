@@ -1,3 +1,5 @@
+import mimetypes
+
 import celery
 from django.db import models
 from django.db.models.signals import post_save
@@ -149,6 +151,21 @@ class PackageMember(models.Model):
                 is_valid = False
 
             return (is_valid, xmlattrs.sps_check_details)
+
+    def guess_type(self):
+        """Infere o mimetype do membro.
+
+        Retorna uma string de texto no formato ``'tipo/subtipo'`` ou ``None``.
+
+        A inferência é realizada por meio da função ``mimetypes.guess_type``,
+        da biblioteca padrão da linguagem. Tipos adicionais -- fora do padrão
+        IANA mas comumente utilizados -- são suportados.
+
+        Mais informação em:
+        https://docs.python.org/3/library/mimetypes.html#mimetypes.guess_type
+        """
+        type, _ = mimetypes.guess_type(self.name, strict=False)
+        return type
 
 
 class XMLMemberControlAttrs(models.Model):
