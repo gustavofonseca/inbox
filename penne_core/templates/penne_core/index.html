@@ -1,12 +1,55 @@
 {% extends "base.html" %}
+{% load humanize %}
+{% load frontdesk %}
+
+{% block css %}
+  <link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap.css">
+{% endblock css%}
 
 {% block content %}
 <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1 class="modal-title">Depósitos</h1>
+    <h1 class="modal-title">Lista de depósitos</h1>
 </section>
 <!-- Main content -->
 <section class="content">
-    Lista de depósitos
+  <table id="package_files" class="table table-hover dataTable">
+    <thead>
+      <tr>
+        <th>número do protocolo</th>
+        <th>nome do arquivo depositado</th>
+        <th>data de depósito</th>
+        <th>depositado por</th>
+        <th>status do pacote</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for deposit in deposits %}
+        <tr>
+          <td><a href="{% url 'package_report' deposit.pk %}">#{{ deposit.pk }}</a></td> 
+          <td><a href="{% url 'package_report' deposit.pk %}">{{ deposit.package.file.name }}</a></td>
+          <td>{{ deposit.created|naturaltime }}</td>
+          <td>{{ deposit.depositor }}</td>
+          <td>
+            <span class="label bg-{{ deposit.status|status_color }}">
+              {{ deposit.status }}
+            </span>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </section>
 {% endblock content %}
+
+
+{% block javascript %}
+  <script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+  <script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+  <script>
+
+    $(document).ready(function() {
+        $('#package_files').DataTable({"order": [[ 0, "desc" ]]});
+    } );
+  </script>
+{% endblock javascript %}

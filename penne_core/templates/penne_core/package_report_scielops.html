@@ -1,5 +1,83 @@
 {% extends "penne_core/package_report.html" %}
+{% load frontdesk %}
 
 {% block reports_content %}
 <h3 class="modal-title">Relatório de SciELO Publishing Schema (SciELO PS)</h3>
+
+{% for status, xmls in detailed_deposit.package.xmls.items %}
+  {% for member in xmls %}
+    <div class="row">
+      <div class="col-md-12 col-sm-24 col-xs-36">
+        <div class="box box-{{ member.sps_validation_status|status_sps|box_color }} collapsed-box">
+          <div class="box-header with-border">
+            <h3 class="box-title">
+              <i class="fa fa-code"></i>
+              {{ member.name }}
+              <span class="label bg-{{ member.sps_validation_status|status_sps|status_color }}">
+                {{ member.sps_validation_status|status_sps }}
+              </span>
+            </h3>
+            <div class="box-tools pull-right">
+              <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+            <!-- /.box-tools -->
+          </div>
+          <!-- /.box-header -->
+          <div class="box-body" style="display: none;">
+            <div class="col-md-6 col-sm-12 col-xs-18">
+              <h4>Lista de erros de DTD</h4>
+              <table id="package_files" class="table table-bordered dataTable">
+                <thead>
+                  <tr>
+                    <th>descrição do erro</th>
+                    <th>possível linha</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for dtd_error in member.sps_validation_status.1.dtd_errors %}
+                    <tr>
+                      <td>{{ dtd_error.message }}</td>
+                      <td>{{ dtd_error.apparent_line }}</td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="2">Nenhum erro de DTD encontrado</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-18">
+              <h4>Lista de erros do Estilo SciELO Publishing Schema</h4>
+              <table id="package_files" class="table table-bordered dataTable">
+                <thead>
+                  <tr>
+                    <th>descrição do erro</th>
+                    <th>possível linha</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for sps_error in member.sps_validation_status.1.sps_errors %}
+                    <tr>
+                      <td>{{ sps_error.message }}</td>
+                      <td>{{ sps_error.apparent_line }}</td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="2">Nenhum erro do Estilo SciELO PS encontrado</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+      </div>
+    </div>
+  {% endfor %}
+{% endfor %}
 {% endblock reports_content %}

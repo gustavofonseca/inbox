@@ -1,7 +1,11 @@
 {% extends "base.html" %}
 {% load humanize %}
-{% load status_colors %}
+{% load frontdesk %}
 
+{% block css %}
+  <link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap.css">
+{% endblock css%}
+  
 {% block content %}
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -35,12 +39,49 @@
   </div>
   <div class="row">
     <div class="col-md-12 col-sm-24 col-xs-36">
-      <h3>Conteúdo do pacote</h3>
-      <ul>
-        {% for member in detailed_deposit.package.members.all %}
-        <li>{{ member.name }}</li>
-        {% endfor %}
-      </ul>
+      <div class="box box-default collapsed-box">
+        <div class="box-header with-border">
+          <h3 class="box-title">
+            <i class="fa fa-files-o"></i> Lista de arquivos do pacote
+          </h3>
+
+          <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+          <!-- /.box-tools -->
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body" style="display: none;">
+          <table id="package_files" class="table table-hover dataTable">
+            <thead>
+              <tr>
+                <th>nome do arquivo</th>
+                <th>tipo do arquivo</th>
+                <th>estado do xml</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for member in detailed_deposit.package.members.all %}
+                <tr>
+                  <td>{{ member.name }}</td>
+                  <td>{{ member.guess_type }}</td>
+                  <td>
+                    {% if member.is_xml %}
+                      <span class="label bg-{{ member.sps_validation_status|status_sps|status_color }}">
+                        {{ member.sps_validation_status|status_sps }}
+                      </span>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
     </div>
   </div>
   <div class="row">
@@ -77,10 +118,10 @@
       </div>
     </div>
     <div class="col-md-4 col-sm-8 col-xs-16">
-      <div class="small-box bg-{% if detailed_deposit.package.xml_stats.xml_invalid > 0 %}red {% else %}green{% endif %}">
+      <div class="small-box bg-{{ detailed_deposit.package.xmls|widget_scielops_colors_weight }}">
         <div class="inner">
           <h3>SciELO PS</h3>
-          <h4><b>{{ detailed_deposit.package.xml_stats.xml_valid }} xml's válidos</b> e <b>{{ detailed_deposit.package.xml_stats.xml_invalid }} xml's inválidos</b></h4>
+          <h4><b>xml's valídos ({{ detailed_deposit.package.xmls.valid|length }}), inválidos ({{ detailed_deposit.package.xmls.invalid|length }}) e não definidos ({{ detailed_deposit.package.xmls.undefined|length }})</b></h4>
           <h5>
             Verificado em: Sept. 28, 2016, 5:07 p.m. 
           </h5>
@@ -102,5 +143,12 @@
 {% endblock content %}
 
 {% block javascript %}
+  <script src="/static/plugins/datatables/jquery.dataTables.min.js"></script>
+  <script src="/static/plugins/datatables/dataTables.bootstrap.min.js"></script>
+  <script>
 
+    $(document).ready(function() {
+        $('#package_files').DataTable();
+    } );
+  </script>
 {% endblock javascript %}
