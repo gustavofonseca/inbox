@@ -86,24 +86,26 @@ class Package(TimeStampedModel):
                   PACKAGE_VIRUSSCAN_STATUS_UNINFECTED])
     virus_scan_details = models.CharField(max_length=2048, default='')
 
-    @property
-    def xml_stats(self):
+    def xmls(self):
 
-        stats = {
-            'xml_valid': 0, 'xml_invalid': 0, 'xml_total': 0
+        xmls = {
+            'valid': [], 'invalid': [], 'undefined': []
         }
 
         for member in self.members.all():
             if not member.is_xml():
                 continue
 
-            stats['xml_total'] += 1
-            if member.sps_validation_status()[0]:
-                stats['xml_valid'] += 1
-            else:
-                stats['xml_invalid'] += 1
+            if member.sps_validation_status()[0] is True:
+                xmls['valid'].append(member)
 
-        return stats
+            if member.sps_validation_status()[0] is False:
+                xmls['invalid'].append(member)
+
+            if member.sps_validation_status()[0] is None:
+                xmls['undefined'].append(member)
+
+        return xmls
 
 
 class PackageMember(models.Model):
