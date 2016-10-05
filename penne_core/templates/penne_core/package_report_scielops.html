@@ -26,7 +26,52 @@
           </div>
           <!-- /.box-header -->
           <div class="box-body" style="display: none;">
-            {{ member.sps_validation_status.1 }}
+            <div class="col-md-6 col-sm-12 col-xs-18">
+              <h4>Lista de erros de DTD</h4>
+              <table id="package_files" class="table table-bordered dataTable">
+                <thead>
+                  <tr>
+                    <th>descrição do erro</th>
+                    <th>possível linha</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for dtd_error in member.sps_validation_status.1.dtd_errors %}
+                    <tr>
+                      <td>{{ dtd_error.message }}</td>
+                      <td>{{ dtd_error.apparent_line }}</td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="2">Nenhum erro de DTD encontrado</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="col-md-6 col-sm-12 col-xs-18">
+              <h4>Lista de erros do Estilo SciELO Publishing Schema</h4>
+              <table id="package_files" class="table table-bordered dataTable">
+                <thead>
+                  <tr>
+                    <th>descrição do erro</th>
+                    <th>possível linha</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for sps_error in member.sps_validation_status.1.sps_errors %}
+                    <tr>
+                      <td>{{ sps_error.message }}</td>
+                      <td>{{ sps_error.apparent_line }}</td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="2">Nenhum erro do Estilo SciELO PS encontrado</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
           </div>
           <!-- /.box-body -->
         </div>
