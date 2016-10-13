@@ -14,6 +14,7 @@ COPY ./compose/django/start-dev.sh /start-dev.sh
 RUN sed -i 's/\r//' /start-dev.sh
 RUN chmod +x /start-dev.sh
 
+VOLUME /app/penne_core/media
 WORKDIR /app
 
 ENTRYPOINT ["/entrypoint.sh"]

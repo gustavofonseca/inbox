@@ -1,99 +1,76 @@
 penne_core
-==============================
+==========
 
-bla
+*Penne* é o codinome do projeto de software para modernizar o fluxo de 
+ingestão de conteúdos de uma coleção da rede SciELO. Consiste atualmente de 
+2 componentes:
 
-.. image:: https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg
-     :target: https://github.com/pydanny/cookiecutter-django/
-     :alt: Built with Cookiecutter Django
-
-
-LICENSE: BSD
-
-
-Settings
-------------
-
-Moved to settings_.
-
-.. _settings: http://cookiecutter-django.readthedocs.io/en/latest/settings.html
-
-Basic Commands
---------------
-
-Setting Up Your Users
-^^^^^^^^^^^^^^^^^^^^^
-
-* To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
-
-* To create an **superuser account**, use this command::
-
-    $ python manage.py createsuperuser
-
-For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
-
-Test coverage
-^^^^^^^^^^^^^
-
-To run the tests, check your test coverage, and generate an HTML coverage report::
-
-    $ coverage run manage.py test
-    $ coverage html
-    $ open htmlcov/index.html
-
-Running tests with py.test
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-::
-
-  $ py.test
-
-
-Live reloading and Sass CSS compilation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Moved to `Live reloading and SASS compilation`_.
-
-.. _`Live reloading and SASS compilation`: http://cookiecutter-django.readthedocs.io/en/latest/live-reloading-and-sass-compilation.html
+* penne_shell: realiza a interface com o usuário durante o processo de depósito 
+  dos pacotes de artigos, por meio de um servidor FTP.
+* penne_core: registra os depósitos dos pacotes e implementa os fluxos de 
+  verificação e controle de qualidade para o ingresso na coleção.
 
 
 
+Implantação com Docker
+----------------------
 
-Celery
-^^^^^^
-
-This app comes with Celery.
-
-To run a celery worker:
+A base de códigos já vem pré-configurada de tal forma que a construção e 
+execução da instância local de desenvolvimento pode ser realizada por 
+meio dos comandos:
 
 .. code-block:: bash
 
-    cd penne_core
-    celery -A penne_core.taskapp worker -l info
-
-Please note: For Celery's import magic to work, it is important *where* the celery commands are run. If you are in the same folder with *manage.py*, you should be right.
+    docker-compose -f dev.yml build
+    docker-compose -f dev.yml up
 
 
+Nesse momento a aplicação web deve estar respondendo na URL 
+``http://localhost:8000``. É importante notar que o setup da instância de 
+desenvolvimento é composto pelos contêineres *django* e *postgres*, excluíndo os 
+que desempenham tarefas assíncronas, verificação anti-virus e tal.
+
+A execução de comandos administrativos, como por exemplo os para a migração do 
+banco de dados, pode ser realizada conforme o exemplo:
+
+.. code-block:: bash
+
+    docker-compose -f dev.yml run django python manage.py help
 
 
+Visão geral dos serviços envolvidos
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
++-----------+-------+-----------------------------------------------------+
+| Serviço   | Porta | Descrição                                           | 
++===========+=======+=====================================================+
+| django    | 5000  | Aplicação web executada pelo *gunicorn*             |
++-----------+-------+-----------------------------------------------------+
+| nginx     | 80    | Proxy reverso                                       |
++-----------+-------+-----------------------------------------------------+
+| redis     | 6379  | Cache e broker de mensagens assíncronas             |  
++-----------+-------+-----------------------------------------------------+
+| postgres  | 5432  | Banco de dados                                      |
++-----------+-------+-----------------------------------------------------+
+| clamav    | 3310  | antivirus                                           |
++-----------+-------+-----------------------------------------------------+
 
 
+Volumes:
+
++-----------------+------------------+------------------------------------+
+| Nome            | Contêiner        | Destino (contêiner)                |
++=================+==================+====================================+
+| postgres_data   | postgres         | /var/lib/postgresql/data           |
++-----------------+------------------+------------------------------------+
+| postgres_backup | postgres         | /backups                           |
++-----------------+------------------+------------------------------------+
+| django_media    | django           | /app/penne_core/media              |
++-----------------+------------------+------------------------------------+
 
 
-Deployment
-----------
+Principais variáveis de ambiente:
 
-The following details how to deploy this application.
-
-
-
-
-
-Docker
-^^^^^^
-
-See detailed `cookiecutter-django Docker documentation`_.
-
-.. _`cookiecutter-django Docker documentation`: http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html
-
+* POSTGRES_USER
+* POSTGRES_PASSWORD
 

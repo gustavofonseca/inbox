@@ -21,6 +21,7 @@ RUN sed -i 's/\r//' /entrypoint.sh \
     && chmod +x /gunicorn.sh \
     && chown django /gunicorn.sh
 
+VOLUME /app/penne_core/media
 WORKDIR /app
 
 ENTRYPOINT ["/entrypoint.sh"]

@@ -3,6 +3,7 @@ version: '2'
 volumes:
   postgres_data: {}
   postgres_backup: {}
+  django_media: {}
 
 services:
   postgres:
@@ -17,6 +18,8 @@ services:
       context: .
       dockerfile: ./compose/django/Dockerfile
     user: django
+    volumes:
+      - django_media:/app/penne_core/media 
     depends_on:
       - postgres
       - redis

@@ -3,6 +3,7 @@ version: '2'
 volumes:
   postgres_data_dev: {}
   postgres_backup_dev: {}
+  django_media: {}
 
 services:
   postgres:
@@ -10,8 +11,6 @@ services:
     volumes:
       - postgres_data_dev:/var/lib/postgresql/data
       - postgres_backup_dev:/backups
-    environment:
-      - POSTGRES_USER=penne_core
 
   django:
     build:
@@ -21,10 +20,10 @@ services:
     depends_on:
       - postgres
     environment:
-      - POSTGRES_USER=penne_core
       - USE_DOCKER=yes
     volumes:
       - .:/app
+      - django_media:/app/penne_core/media 
     ports:
       - "8000:8000"
     links:
