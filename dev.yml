@@ -19,6 +19,7 @@ services:
     command: /start-dev.sh
     depends_on:
       - postgres
+      - redis
     environment:
       - USE_DOCKER=yes
     volumes:
@@ -28,8 +29,6 @@ services:
       - "8000:8000"
     links:
       - postgres
-
-
-
-
+  redis:
+    image: redis:latest
 
