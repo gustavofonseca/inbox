@@ -17,5 +17,11 @@ clean:
 shell:
 	@docker-compose -f dev.yml run --rm django python manage.py shell_plus
 
+build:
+	@docker-compose -f dev.yml build
 
-.PHONY: start stop test status clean shell
+logs:
+	@docker-compose -f dev.yml logs -f
+
+
+.PHONY: start stop test status clean shell logs
