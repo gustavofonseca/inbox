@@ -11,10 +11,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   install
-   deploy
-   docker_ec2
-   tests
+   install/installation
 
 
 
