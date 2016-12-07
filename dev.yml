@@ -24,11 +24,48 @@ services:
       - USE_DOCKER=yes
     volumes:
       - .:/app
-      - django_media:/app/penne_core/media 
+      - django_media:/app/penne_core/media
     ports:
       - "8000:8000"
-    links:
-      - postgres
   redis:
     image: redis:latest
+
+# ------
+# Os serviços abaixo executam as tarefas assíncronas.
+# ------
+  celeryworker:
+    build:
+      context: .
+      dockerfile: ./compose/django/Dockerfile-dev
+    depends_on:
+     - postgres
+     - redis
+     - clamav
+    environment:
+      - USE_DOCKER=yes
+      - C_FORCE_ROOT=yes  # confirma a execução do celery como super-usuário
+    volumes:
+      - .:/app
+      - django_media:/app/penne_core/media
+    command: celery -A penne_core.taskapp worker -l INFO
+
+  celerybeat:
+    build:
+      context: .
+      dockerfile: ./compose/django/Dockerfile-dev
+    depends_on:
+      - postgres
+      - redis
+      - clamav
+    environment:
+      - USE_DOCKER=yes
+    volumes:
+      - .:/app
+      - django_media:/app/penne_core/media
+    command: celery -A penne_core.taskapp beat -l INFO
+
+  clamav:
+    build: ./compose/clamav
+    ports:
+      - "3310:3310"
 
