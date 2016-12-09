@@ -13,6 +13,8 @@ from model_utils import Choices
 
 from packtools import utils as packtools_utils
 
+from . import signals
+
 
 PACKAGE_VIRUSSCAN_STATUS_QUEUED = 'queued'
 PACKAGE_VIRUSSCAN_STATUS_UNDETERMINED = 'undetermined'
@@ -184,31 +186,37 @@ class XMLMemberControlAttrs(models.Model):
     sps_check_details = JSONField()
 
 
-@receiver(post_save, sender=Package)
-def create_package_members(sender, instance, created, **kwargs):
+@receiver(signals.package_deposited)
+def create_package_members(sender, instance, **kwargs):
     """Cria as entidades de representam cada arquivo membro de ``Package``.
+
+    :param instance: instância de ``models.Deposit``.
     """
-    if created:
-        celery.current_app.send_task(
-                'frontdesk.tasks.create_package_members',
-                args=[instance.pk])
+    celery.current_app.send_task(
+            'frontdesk.tasks.create_package_members',
+            args=[instance.package.pk])
 
 
-@receiver(post_save, sender=Package)
-def scan_package_for_viruses(sender, instance, created, **kwargs):
+@receiver(signals.package_deposited)
+def scan_package_for_viruses(sender, instance, **kwargs):
     """Varre o arquivo referenciado por ``Package.file`` em busca de vírus.
+
+    :param instance: instância de ``models.Deposit``.
     """
-    if created:
-        celery.current_app.send_task(
-                'frontdesk.tasks.scan_package_for_viruses',
-                args=[instance.pk])
+    celery.current_app.send_task(
+            'frontdesk.tasks.scan_package_for_viruses',
+            args=[instance.package.pk])
 
 
-@receiver(post_save, sender=PackageMember)
-def validate_package_member_against_sps(sender, instance, created, **kwargs):
+@receiver(signals.package_members_created)
+def validate_package_member_against_sps(sender, instance, **kwargs):
     """Valida XMLs contra a SciELO PS.
+
+    :param instance: instância de ``models.Package``.
     """
-    if created and instance.is_xml():
-        celery.current_app.send_task(
-                'frontdesk.tasks.validate_package_member',
-                args=[instance.pk])
+    for member in instance.members.all():
+        if member.is_xml():
+            celery.current_app.send_task(
+                    'frontdesk.tasks.validate_package_member',
+                    args=[member.pk])
+

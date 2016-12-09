@@ -3,6 +3,7 @@ from django.db import transaction
 from . import (
         models,
         utils,
+        signals,
 )
 
 
@@ -36,6 +37,11 @@ def deposit_package(file, md5_sum, depositor):
     deposit = models.Deposit.objects.create(depositor=depositor)
     package = models.Package.objects.create(
             deposit=deposit, file=file, md5_sum=md5_sum)
+
+    # registra um transactional hook para a emissão do evento
+    # ``frontdesk.signals.package_deposited`` caso a transação seja efetivada.
+    transaction.on_commit(lambda: signals.package_deposited.send_robust(
+        sender=deposit_package, instance=deposit))
 
     return deposit.pk
 
