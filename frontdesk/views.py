@@ -4,13 +4,12 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import (
         JsonResponse,
         HttpResponseBadRequest,
-        HttpResponseNotAllowed,
 )
+from django.views.decorators.http import require_http_methods
 
 from . import (
         transactions,
         forms,
-        models,
 )
 
 
@@ -18,10 +17,8 @@ LOGGER = logging.getLogger(__name__)
 
 
 @csrf_exempt
+@require_http_methods(["POST"])
 def deposit_package(request):
-    if request.method != 'POST':
-        return HttpResponseNotAllowed(['POST'])
-
     form = forms.DepositForm(request.POST, request.FILES)
     if form.is_valid():
         try:
