@@ -5,6 +5,7 @@ from penne_core.taskapp.celery import app
 from . import (
         models,
         utils,
+        signals,
 )
 
 import packtools
@@ -27,6 +28,13 @@ def create_package_members(package_id):
 
     with packtools_utils.Xray.fromfile(package.file.path) as xpack:
         with transaction.atomic():
+            # registra um transactional hook para a emissão do evento
+            # ``frontdesk.signals.package_members_created`` caso a transação
+            # seja efetivada.
+            transaction.on_commit(
+                    lambda: signals.package_members_created.send_robust(
+                        sender=create_package_members, instance=package))
+
             for member in xpack.show_members():
                 models.PackageMember.objects.create(
                         package=package, name=member)
