@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load humanize %}
-{% load frontdesk %}
+{% load frontdesk_extras %}
 
 {% block css %}
   <link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap.css">
@@ -26,7 +26,7 @@
     <tbody>
       {% for deposit in deposits %}
         <tr>
-          <td><a href="{% url 'package_report' deposit.pk %}">#{{ deposit.pk }}</a></td> 
+          <td><a href="{% url 'package_report' deposit.pk %}">#{{ deposit.pk }}</a></td>
           <td><a href="{% url 'package_report' deposit.pk %}">{{ deposit.package.file.name }}</a></td>
           <td>{{ deposit.created|naturaltime }}</td>
           <td>{{ deposit.depositor }}</td>

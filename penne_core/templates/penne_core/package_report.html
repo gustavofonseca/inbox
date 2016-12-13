@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% load humanize %}
-{% load frontdesk %}
+{% load frontdesk_extras %}
 
 {% block css %}
   <link rel="stylesheet" href="/static/plugins/datatables/dataTables.bootstrap.css">
 {% endblock css%}
-  
+
 {% block content %}
 <!-- Content Header (Page header) -->
 <section class="content-header">
@@ -107,7 +107,7 @@
           <h3>Integridade</h3>
           <h4>erros encontrados</h4>
           <h5>
-            Verificado em: Sept. 28, 2016, 5:07 p.m. 
+            Verificado em: Sept. 28, 2016, 5:07 p.m.
           </h5>
         </div>
         <div class="icon"><i class="fa fa-circle-thin"></i></div>
@@ -123,7 +123,7 @@
           <h3>SciELO PS</h3>
           <h4><b>xml's valídos ({{ detailed_deposit.package.xmls.valid|length }}), inválidos ({{ detailed_deposit.package.xmls.invalid|length }}) e não definidos ({{ detailed_deposit.package.xmls.undefined|length }})</b></h4>
           <h5>
-            Verificado em: Sept. 28, 2016, 5:07 p.m. 
+            Verificado em: Sept. 28, 2016, 5:07 p.m.
           </h5>
         </div>
         <div class="icon"><i class="fa fa-code"></i></div>

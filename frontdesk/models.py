@@ -2,8 +2,6 @@ import mimetypes
 
 import celery
 from django.db import models
-from django.db.models.signals import post_save
-from django.urls import reverse
 from django.dispatch import receiver
 from django.contrib.postgres.fields import JSONField
 
