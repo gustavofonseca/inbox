@@ -1,9 +1,9 @@
-.. penne_core documentation master file, created by
+.. inbox documentation master file, created by
    sphinx-quickstart.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to penne_core's documentation!
+Welcome to inbox's documentation!
 ====================================================================
 
 Contents:

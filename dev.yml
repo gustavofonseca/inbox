@@ -26,7 +26,7 @@ services:
       - USE_DOCKER=yes
     volumes:
       - .:/app
-      - django_media:/app/penne_core/media
+      - django_media:/app/inbox/media
     ports:
       - "8000:8000"
     stdin_open: True
@@ -51,8 +51,8 @@ services:
       - C_FORCE_ROOT=yes  # confirma a execução do celery como super-usuário
     volumes:
       - .:/app
-      - django_media:/app/penne_core/media
-    command: celery -A penne_core.taskapp worker -l INFO
+      - django_media:/app/inbox/media
+    command: celery -A inbox.taskapp worker -l INFO
 
   celerybeat:
     build:
@@ -66,8 +66,8 @@ services:
       - USE_DOCKER=yes
     volumes:
       - .:/app
-      - django_media:/app/penne_core/media
-    command: celery -A penne_core.taskapp beat -l INFO
+      - django_media:/app/inbox/media
+    command: celery -A inbox.taskapp beat -l INFO
 
   clamav:
     build: ./compose/clamav
