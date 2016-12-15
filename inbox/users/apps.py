@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 
 class UsersConfig(AppConfig):
-    name = 'penne_core.users'
+    name = 'inbox.users'
     verbose_name = "Users"
 
     def ready(self):

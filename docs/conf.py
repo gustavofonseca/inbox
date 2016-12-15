@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# penne_core documentation build configuration file, created by
+# inbox documentation build configuration file, created by
 # sphinx-quickstart.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -43,7 +43,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'penne_core'
+project = 'inbox'
 copyright = """2016, SciELO Dev"""
 
 # The version info for the project you're documenting, acts as replacement for
@@ -167,7 +167,7 @@ html_static_path = ['_static']
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'penne_coredoc'
+htmlhelp_basename = 'inboxdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -187,8 +187,8 @@ latex_elements = {
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
     ('index',
-     'penne_core.tex',
-     'penne_core Documentation',
+     'inbox.tex',
+     'inbox Documentation',
      """SciELO Dev""", 'manual'),
 ]
 
@@ -218,7 +218,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'penne_core', 'penne_core Documentation',
+    ('index', 'inbox', 'inbox Documentation',
      ["""SciELO Dev"""], 1)
 ]
 
@@ -232,8 +232,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'penne_core', 'penne_core Documentation',
-     """SciELO Dev""", 'penne_core',
+    ('index', 'inbox', 'inbox Documentation',
+     """SciELO Dev""", 'inbox',
      """bla""", 'Miscellaneous'),
 ]
 

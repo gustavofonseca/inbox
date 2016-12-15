@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Django settings for penne_core project.
+Django settings for inbox project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/dev/topics/settings/
@@ -12,8 +12,8 @@ from __future__ import absolute_import, unicode_literals
 
 import environ
 
-ROOT_DIR = environ.Path(__file__) - 3  # (penne_core/config/settings/common.py - 3 = penne_core/)
-APPS_DIR = ROOT_DIR.path('penne_core')
+ROOT_DIR = environ.Path(__file__) - 3  # (inbox/config/settings/common.py - 3 = inbox/)
+APPS_DIR = ROOT_DIR.path('inbox')
 
 env = environ.Env()
 
@@ -44,7 +44,7 @@ THIRD_PARTY_APPS = (
 # Apps specific for this project go here.
 LOCAL_APPS = (
     # custom users app
-    'penne_core.users.apps.UsersConfig',
+    'inbox.users.apps.UsersConfig',
     'frontdesk',
 )
 
@@ -66,7 +66,7 @@ MIDDLEWARE_CLASSES = (
 # MIGRATIONS CONFIGURATION
 # ------------------------------------------------------------------------------
 MIGRATION_MODULES = {
-    'sites': 'penne_core.contrib.sites.migrations'
+    'sites': 'inbox.contrib.sites.migrations'
 }
 
 # DEBUG
@@ -100,7 +100,7 @@ MANAGERS = ADMINS
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
     # Raises ImproperlyConfigured exception if DATABASE_URL not in os.environ
-    'default': env.db('DATABASE_URL', default='postgres:///penne_core'),
+    'default': env.db('DATABASE_URL', default='postgres:///inbox'),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
@@ -214,8 +214,8 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 
 ACCOUNT_ALLOW_REGISTRATION = env.bool('DJANGO_ACCOUNT_ALLOW_REGISTRATION', True)
-ACCOUNT_ADAPTER = 'penne_core.users.adapters.AccountAdapter'
-SOCIALACCOUNT_ADAPTER = 'penne_core.users.adapters.SocialAccountAdapter'
+ACCOUNT_ADAPTER = 'inbox.users.adapters.AccountAdapter'
+SOCIALACCOUNT_ADAPTER = 'inbox.users.adapters.SocialAccountAdapter'
 
 # Custom user app defaults
 # Select the correct user model
@@ -227,7 +227,7 @@ LOGIN_URL = 'account_login'
 AUTOSLUG_SLUGIFY_FUNCTION = 'slugify.slugify'
 
 ########## CELERY
-INSTALLED_APPS += ('penne_core.taskapp.celery.CeleryConfig',)
+INSTALLED_APPS += ('inbox.taskapp.celery.CeleryConfig',)
 # if you are not using the django database broker (e.g. rabbitmq, redis, memcached), you can remove the next line.
 INSTALLED_APPS += ('kombu.transport.django',)
 BROKER_URL = env('CELERY_BROKER_URL', default='django://')

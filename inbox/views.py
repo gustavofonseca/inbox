@@ -36,25 +36,25 @@ def index(request, context=None):
 
     context = {'deposits': deposits}
 
-    return render(request, 'penne_core/index.html', context)
+    return render(request, 'inbox/index.html', context)
 
 
 @with_deposit
 def package_report(request, deposit_id, context=None):
 
-    return render(request, 'penne_core/package_report.html', context)
+    return render(request, 'inbox/package_report.html', context)
 
 @with_deposit
 def package_report_virus(request, deposit_id, context=None):
 
-    return render(request, 'penne_core/package_report_virus.html', context)
+    return render(request, 'inbox/package_report_virus.html', context)
 
 @with_deposit
 def package_report_integrity(request, deposit_id, context=None):
 
-    return render(request, 'penne_core/package_report_integrity.html', context)
+    return render(request, 'inbox/package_report_integrity.html', context)
 
 @with_deposit
 def package_report_scielops(request, deposit_id, context=None):
 
-    return render(request, 'penne_core/package_report_scielops.html', context)
+    return render(request, 'inbox/package_report_scielops.html', context)
