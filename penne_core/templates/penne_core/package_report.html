@@ -13,7 +13,7 @@
     Depósito (#{{ detailed_deposit.pk }})
   </h1>
 </section>
-<!-- Main content -->
+
 <section class="content">
   <div class="row">
     <div class="col-md-12 col-sm-18 col-xs-36">
@@ -24,11 +24,15 @@
         <div class="info-box-content">
             <span class="info-box-number">
               {{ detailed_deposit.package.file.name }} (
-              {% if detailed_deposit.package.virus_scan_status != 'infected' %}
-                <a href="{{ detailed_deposit.package.file.url }}"><i class="fa fa-cloud-download"></i>Download</a>
-              {% else %}
-                <i class="fa fa-cloud-download"></i> Download indisponível, pacote com virus.
-              {% endif %})
+              <a href="{{ detailed_deposit.package.file.url }}"
+                 class="{% if detailed_deposit.package.virus_scan_status|should_warn_before_downloading %}
+                              use_confirm_box_to_start_the_download
+                        {% endif %}">
+                  <i class="fa fa-cloud-download"></i>
+                  Download
+              </a>
+              )
+
             </span>
             <div><b>MD5 Sum:</b> {{ detailed_deposit.package.md5_sum }}</div>
             <div><b>Depositado em:</b> {{ detailed_deposit.created }} <b>por</b> {{ detailed_deposit.depositor }}</div>
@@ -150,5 +154,15 @@
     $(document).ready(function() {
         $('#package_files').DataTable();
     } );
+
+
+
+    $('.use_confirm_box_to_start_the_download').click(function(event) {
+        event.preventDefault();
+        var r=confirm("ATENÇÃO! Este deposito pode conter vírus. Você deseja realmente fazer o download?");
+        if (r==true)   {
+           window.location = $(this).attr('href');
+        }
+    });
   </script>
 {% endblock javascript %}

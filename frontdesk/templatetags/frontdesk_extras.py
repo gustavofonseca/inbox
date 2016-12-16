@@ -1,5 +1,6 @@
 from django import template
 from django.template.defaultfilters import stringfilter
+from frontdesk.models import PACKAGE_VIRUSSCAN_STATUS_INFECTED, PACKAGE_VIRUSSCAN_STATUS_UNINFECTED, PACKAGE_VIRUSSCAN_STATUS_UNDETERMINED, PACKAGE_VIRUSSCAN_STATUS_QUEUED
 
 register = template.Library()
 
@@ -23,6 +24,13 @@ BOX_COLORS = {
     'green': 'success',
     'grey': 'default'
 }
+
+ACCEPT_VIRUS_SCAN_STATUS = [
+    PACKAGE_VIRUSSCAN_STATUS_UNINFECTED,
+    PACKAGE_VIRUSSCAN_STATUS_QUEUED,
+    PACKAGE_VIRUSSCAN_STATUS_UNDETERMINED,
+    PACKAGE_VIRUSSCAN_STATUS_INFECTED,
+]
 
 
 @register.filter
@@ -63,6 +71,7 @@ def status_sps(status):
 
     return 'undefined'
 
+
 @register.filter
 def widget_scielops_colors_weight(xmls):
     """
@@ -82,3 +91,28 @@ def widget_scielops_colors_weight(xmls):
         return STATUS_COLORS['undefined']
 
     return STATUS_COLORS['valid']
+
+
+@register.filter
+def should_warn_before_downloading(virusscan_status):
+    """
+    Este método avalia o status da varredura de vírus no pacote para garantir que ele não está infectado.
+
+    Quando o status for igual a constante do models.PACKAGE_VIRUSSCAN_STATUS_UNINFECTED ele retornará falso.
+    Não necessitando informar o usuário sobre a possibilidade de vírus no pacote.
+
+    Este filtro foi projetado para auxiliar a confecção de templates, facilitando a decisão de exibição de um alerta
+    especifico para a questão de vírus.
+
+    :param virusscan_status: package_virusscan_status
+    :return : bool
+
+    """
+
+    if virusscan_status not in ACCEPT_VIRUS_SCAN_STATUS:
+        raise ValueError('Status not supported')
+
+    if virusscan_status == PACKAGE_VIRUSSCAN_STATUS_UNINFECTED:
+        return False
+
+    return True
