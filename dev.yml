@@ -11,6 +11,8 @@ services:
     volumes:
       - postgres_data_dev:/var/lib/postgresql/data
       - postgres_backup_dev:/backups
+    ports:
+      - "5431:5432"
 
   django:
     build:

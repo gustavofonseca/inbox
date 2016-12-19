@@ -1,7 +1,7 @@
 from functools import wraps
 from django.shortcuts import (
-        render,
-        get_object_or_404,
+    render,
+    get_object_or_404,
 )
 from django.utils.decorators import available_attrs
 
@@ -9,17 +9,16 @@ import frontdesk
 
 
 def with_deposit(func):
-
     @wraps(func, assigned=available_attrs(func))
     def wrapper(request, deposit_id, *args, **kwargs):
 
-        deposits = frontdesk.models.Deposit.objects.order_by('-created')[:10]
+        deposits = frontdesk.models.Deposit.objects.order_by('-created')[:999]
         if deposit_id:
             detailed_deposit = get_object_or_404(
                 frontdesk.models.Deposit, pk=deposit_id)
         else:
             detailed_deposit = frontdesk.models.Deposit.objects.order_by(
-                    '-created').first()
+                '-created').first()
 
         context = {'deposits': deposits, 'detailed_deposit': detailed_deposit}
 
@@ -31,8 +30,7 @@ def with_deposit(func):
 
 
 def index(request, context=None):
-
-    deposits = frontdesk.models.Deposit.objects.order_by('-created')[:10]
+    deposits = frontdesk.models.Deposit.objects.order_by('-created')[:999]
 
     context = {'deposits': deposits}
 
