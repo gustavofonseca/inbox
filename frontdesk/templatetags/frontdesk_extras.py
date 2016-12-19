@@ -1,6 +1,13 @@
 from django import template
 from django.template.defaultfilters import stringfilter
-from frontdesk.models import PACKAGE_VIRUSSCAN_STATUS_INFECTED, PACKAGE_VIRUSSCAN_STATUS_UNINFECTED, PACKAGE_VIRUSSCAN_STATUS_UNDETERMINED, PACKAGE_VIRUSSCAN_STATUS_QUEUED
+
+from frontdesk.models import (
+        PACKAGE_VIRUSSCAN_STATUS_INFECTED,
+        PACKAGE_VIRUSSCAN_STATUS_UNINFECTED,
+        PACKAGE_VIRUSSCAN_STATUS_UNDETERMINED,
+        PACKAGE_VIRUSSCAN_STATUS_QUEUED,
+)
+
 
 register = template.Library()
 
@@ -18,6 +25,7 @@ STATUS_COLORS = {
     'undefined': 'blue'
 }
 
+
 BOX_COLORS = {
     'blue': 'primary',
     'red': 'danger',
@@ -25,7 +33,8 @@ BOX_COLORS = {
     'grey': 'default'
 }
 
-ACCEPT_VIRUS_SCAN_STATUS = [
+
+ACCEPTED_VIRUS_SCAN_STATUSES = [
     PACKAGE_VIRUSSCAN_STATUS_UNINFECTED,
     PACKAGE_VIRUSSCAN_STATUS_QUEUED,
     PACKAGE_VIRUSSCAN_STATUS_UNDETERMINED,
@@ -96,23 +105,28 @@ def widget_scielops_colors_weight(xmls):
 @register.filter
 def should_warn_before_downloading(virusscan_status):
     """
-    Este método avalia o status da varredura de vírus no pacote para garantir que ele não está infectado.
+    Este método avalia o status da varredura de vírus no pacote para garantir
+    que ele não está infectado.
 
-    Quando o status for igual a constante do models.PACKAGE_VIRUSSCAN_STATUS_UNINFECTED ele retornará falso.
+    Quando o status for igual a constante do
+    models.PACKAGE_VIRUSSCAN_STATUS_UNINFECTED ele retornará falso.
     Não necessitando informar o usuário sobre a possibilidade de vírus no pacote.
 
-    Este filtro foi projetado para auxiliar a confecção de templates, facilitando a decisão de exibição de um alerta
-    especifico para a questão de vírus.
+    Este filtro foi projetado para auxiliar a confecção de templates,
+    facilitando a decisão de exibição de um alerta especifico para a questão
+    de vírus.
 
-    :param virusscan_status: package_virusscan_status
-    :return : bool
+    :param virusscan_status: Valores válidos para o atributo
+    ``models.Package.virus_scan_status.
+    :return: bool
 
     """
 
-    if virusscan_status not in ACCEPT_VIRUS_SCAN_STATUS:
+    if virusscan_status not in ACCEPTED_VIRUS_SCAN_STATUSES:
         raise ValueError('Status not supported')
 
     if virusscan_status == PACKAGE_VIRUSSCAN_STATUS_UNINFECTED:
         return False
 
     return True
+

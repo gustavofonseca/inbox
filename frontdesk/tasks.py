@@ -2,11 +2,6 @@ import logging
 
 from django.db import transaction
 from penne_core.taskapp.celery import app
-from . import (
-        models,
-        utils,
-        signals,
-)
 
 import packtools
 from packtools import (
@@ -14,6 +9,11 @@ from packtools import (
         utils as packtools_utils,
 )
 
+from . import (
+        models,
+        utils,
+        signals,
+)
 
 LOGGER = logging.getLogger(__name__)
 

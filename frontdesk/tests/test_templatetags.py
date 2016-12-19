@@ -1,7 +1,14 @@
 from unittest import TestCase
+
 from django.template import Template, Context
-from frontdesk.models import PACKAGE_VIRUSSCAN_STATUS_QUEUED, PACKAGE_VIRUSSCAN_STATUS_UNDETERMINED, PACKAGE_VIRUSSCAN_STATUS_INFECTED, PACKAGE_VIRUSSCAN_STATUS_UNINFECTED
-from frontdesk.models import Package
+
+from frontdesk.models import (
+        Package,
+        PACKAGE_VIRUSSCAN_STATUS_QUEUED,
+        PACKAGE_VIRUSSCAN_STATUS_UNDETERMINED,
+        PACKAGE_VIRUSSCAN_STATUS_INFECTED,
+        PACKAGE_VIRUSSCAN_STATUS_UNINFECTED,
+)
 from frontdesk.templatetags.frontdesk_extras import should_warn_before_downloading
 
 
