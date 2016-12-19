@@ -47,9 +47,9 @@ disponibilizado na raíz do projeto. As tarefas disponíveis são:
 .. code-block:: bash
 
     gustavofonseca@PAT113-SCIELO-2:inbox make start
-    Creating pennecore_redis_1
-    Creating pennecore_postgres_1
-    Creating pennecore_django_1
+    Creating inbox_redis_1
+    Creating inbox_postgres_1
+    Creating inbox_django_1
 
 
 Visão geral dos serviços envolvidos
