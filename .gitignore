@@ -57,7 +57,7 @@ node_modules/
 .env
 
 # User-uploaded media
-penne_core/media/
+inbox/media/
 
 # Hitch directory
 tests/.hitch

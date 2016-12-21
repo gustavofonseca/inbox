@@ -11,11 +11,11 @@ if not settings.configured:
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.local')  # pragma: no cover
 
 
-app = Celery('penne_core')
+app = Celery('inbox')
 
 
 class CeleryConfig(AppConfig):
-    name = 'penne_core.taskapp'
+    name = 'inbox.taskapp'
     verbose_name = 'Celery Config'
 
     def ready(self):
@@ -24,9 +24,9 @@ class CeleryConfig(AppConfig):
         app.config_from_object('django.conf:settings')
         app.autodiscover_tasks(lambda: settings.INSTALLED_APPS, force=True)
 
-        
 
-        
+
+
 
 
 @app.task(bind=True)

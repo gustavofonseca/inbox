@@ -1,7 +1,7 @@
 import logging
 
 from django.db import transaction
-from penne_core.taskapp.celery import app
+from inbox.taskapp.celery import app
 from . import (
         models,
         utils,
