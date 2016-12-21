@@ -29,6 +29,9 @@ services:
       - django_media:/app/penne_core/media
     ports:
       - "8000:8000"
+    stdin_open: True
+    tty: True
+
   redis:
     image: redis:latest
 
