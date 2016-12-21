@@ -7,7 +7,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.views import defaults as default_views
 
-from penne_core import views as pc_views  # views em nível de projeto
+from inbox import views as pc_views  # views em nível de projeto
 
 
 urlpatterns = [
@@ -21,7 +21,7 @@ urlpatterns = [
     url(settings.ADMIN_URL, include(admin.site.urls)),
 
     # User management
-    url(r'^users/', include('penne_core.users.urls', namespace='users')),
+    url(r'^users/', include('inbox.users.urls', namespace='users')),
     url(r'^accounts/', include('allauth.urls')),
 
     # Your stuff: custom urls includes go here

@@ -19,7 +19,7 @@ services:
       dockerfile: ./compose/django/Dockerfile
     user: django
     volumes:
-      - django_media:/app/penne_core/media 
+      - django_media:/app/inbox/media
     depends_on:
       - postgres
       - redis
@@ -48,7 +48,7 @@ services:
      - postgres
      - redis
      - clamav
-    command: celery -A penne_core.taskapp worker -l INFO
+    command: celery -A inbox.taskapp worker -l INFO
 
   celerybeat:
     build:
@@ -60,7 +60,7 @@ services:
       - postgres
       - redis
       - clamav
-    command: celery -A penne_core.taskapp beat -l INFO
+    command: celery -A inbox.taskapp beat -l INFO
 
   clamav:
     build: ./compose/clamav
