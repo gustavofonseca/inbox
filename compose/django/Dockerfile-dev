@@ -2,9 +2,15 @@ FROM python:3.5
 
 ENV PYTHONUNBUFFERED 1
 
+RUN apt-get update && apt-get install -qqy apt-utils && apt-get install -qqy libxml2-utils
+
 # Requirements have to be pulled and installed here, otherwise caching won't work
 COPY ./requirements /requirements
 RUN pip install -r /requirements/local.txt
+
+RUN mkdir -p /etc/xml \
+    && bash -c "$(curl -fsSL https://raw.githubusercontent.com/scieloorg/packtools/master/scripts/install_xml_catalog.sh)"
+
 
 COPY ./compose/django/entrypoint.sh /entrypoint.sh
 RUN sed -i 's/\r//' /entrypoint.sh
