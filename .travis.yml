@@ -20,9 +20,9 @@ script:
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_EVENT_TYPE" == "push" ]; then
     docker login -u="$DOCKER_USER" -p="$DOCKER_PASS";
-    docker build -t $(TRAVIS_REPO_SLUG):$(TRAVIS_COMMIT::8) .;
-    docker tag $(TRAVIS_REPO_SLUG):$(TRAVIS_COMMIT::8) $(TRAVIS_REPO_SLUG):latest;
-    docker tag $(TRAVIS_REPO_SLUG):$(TRAVIS_COMMIT::8) $(TRAVIS_REPO_SLUG):travis-$(TRAVIS_BUILD_NUMBER);
-    docker push $(TRAVIS_REPO_SLUG);
+    docker build -t $TRAVIS_REPO_SLUG:$TRAVIS_COMMIT::8 .;
+    docker tag $TRAVIS_REPO_SLUG:$TRAVIS_COMMIT::8 $TRAVIS_REPO_SLUG:latest;
+    docker tag $TRAVIS_REPO_SLUG:$TRAVIS_COMMIT::8 $TRAVIS_REPO_SLUG:travis-$TRAVIS_BUILD_NUMBER;
+    docker push $TRAVIS_REPO_SLUG;
     fi
 
