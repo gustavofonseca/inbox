@@ -2,7 +2,7 @@
 -r base.txt
 
 flake8==3.2.1 # pyup: != 2.6.0
-Sphinx==1.4.5
+Sphinx==1.5.1
 django-extensions==1.7.5
 Werkzeug==0.11.10
 django-debug-toolbar==1.5
