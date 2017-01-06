@@ -9,7 +9,93 @@ from frontdesk.models import (
         PACKAGE_VIRUSSCAN_STATUS_INFECTED,
         PACKAGE_VIRUSSCAN_STATUS_UNINFECTED,
 )
-from frontdesk.templatetags.frontdesk_extras import should_warn_before_downloading
+from frontdesk.templatetags import frontdesk_extras as tags
+
+
+class WidgetScielopsColorsWeightTests(TestCase):
+    """Testa a regra de precedência para a obtenção da cor que representa o
+    status geral do pacote.
+    """
+
+    def test_implicitly_undefined(self):
+        xmls = {
+            'valid': [],
+            'invalid': [],
+            'undefined': [],
+        }
+
+        self.assertEqual(tags.widget_scielops_colors_weight(xmls),
+                tags.STATUS_COLORS['undefined'])
+
+    def test_explicitly_undefined(self):
+        xmls = {
+            'valid': [],
+            'invalid': [],
+            'undefined': [True],
+        }
+
+        self.assertEqual(tags.widget_scielops_colors_weight(xmls),
+                tags.STATUS_COLORS['undefined'])
+
+    def test_explicitly_invalid(self):
+        xmls = {
+            'valid': [],
+            'invalid': [True],
+            'undefined': [],
+        }
+
+        self.assertEqual(tags.widget_scielops_colors_weight(xmls),
+                tags.STATUS_COLORS['invalid'])
+
+    def test_invalid_prevails_over_undefined(self):
+        xmls = {
+            'valid': [],
+            'invalid': [True],
+            'undefined': [True],
+        }
+
+        self.assertEqual(tags.widget_scielops_colors_weight(xmls),
+                tags.STATUS_COLORS['invalid'])
+
+    def test_explicitly_valid(self):
+        xmls = {
+            'valid': [True],
+            'invalid': [],
+            'undefined': [],
+        }
+
+        self.assertEqual(tags.widget_scielops_colors_weight(xmls),
+                tags.STATUS_COLORS['valid'])
+
+    def test_undefined_prevails_over_valid(self):
+        xmls = {
+            'valid': [True],
+            'invalid': [],
+            'undefined': [True],
+        }
+
+        self.assertEqual(tags.widget_scielops_colors_weight(xmls),
+                tags.STATUS_COLORS['undefined'])
+
+    def test_invalid_prevails_over_valid(self):
+        xmls = {
+            'valid': [True],
+            'invalid': [True],
+            'undefined': [],
+        }
+
+        self.assertEqual(tags.widget_scielops_colors_weight(xmls),
+                tags.STATUS_COLORS['invalid'])
+
+    def test_invalid_prevails_over_all(self):
+        xmls = {
+            'valid': [True],
+            'invalid': [True],
+            'undefined': [True],
+        }
+
+        self.assertEqual(tags.widget_scielops_colors_weight(xmls),
+                tags.STATUS_COLORS['invalid'])
 
 
 class TemplatetagsTest(TestCase):
@@ -174,21 +260,25 @@ class TemplatetagsTest(TestCase):
         self.assertIn('blue', rendered)
 
     def test_should_warn_before_downloading_queued(self):
-        result = should_warn_before_downloading(PACKAGE_VIRUSSCAN_STATUS_QUEUED)
+        result = tags.should_warn_before_downloading(
+                PACKAGE_VIRUSSCAN_STATUS_QUEUED)
         self.assertTrue(result)
 
     def test_should_warn_before_downloading_undetermined(self):
-        result = should_warn_before_downloading(PACKAGE_VIRUSSCAN_STATUS_UNDETERMINED)
+        result = tags.should_warn_before_downloading(
+                PACKAGE_VIRUSSCAN_STATUS_UNDETERMINED)
         self.assertTrue(result)
 
     def test_should_warn_before_downloading_infected(self):
-        result = should_warn_before_downloading(PACKAGE_VIRUSSCAN_STATUS_INFECTED)
+        result = tags.should_warn_before_downloading(
+                PACKAGE_VIRUSSCAN_STATUS_INFECTED)
         self.assertTrue(result)
 
     def test_should_warn_before_downloading_uninfected(self):
-        result = should_warn_before_downloading(PACKAGE_VIRUSSCAN_STATUS_UNINFECTED)
+        result = tags.should_warn_before_downloading(
+                PACKAGE_VIRUSSCAN_STATUS_UNINFECTED)
         self.assertFalse(result)
 
     def test_should_warn_before_downloading_unknown_status(self):
         self.assertRaises(ValueError,
-                          lambda: should_warn_before_downloading(Package()))
+                          lambda: tags.should_warn_before_downloading(Package()))
