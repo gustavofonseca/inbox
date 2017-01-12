@@ -2,9 +2,12 @@ FROM python:3.5
 
 ENV PYTHONUNBUFFERED 1
 
-RUN apt-get update && apt-get install -qqy apt-utils && apt-get install -qqy libxml2-utils
+MAINTAINER SciELO <scielo-dev@googlegroups.com>
 
-# Requirements have to be pulled and installed here, otherwise caching won't work
+RUN apt-get update \
+    && apt-get install -qqy apt-utils \
+    && apt-get install -qqy libxml2-utils
+
 COPY ./requirements /requirements
 RUN pip install -r /requirements/local.txt \
     && groupadd -r django \

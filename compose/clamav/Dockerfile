@@ -1,6 +1,6 @@
 FROM debian:jessie
 
-MAINTAINER Gustavo Fonseca <gustavo.fonseca@scielo.org>
+MAINTAINER SciELO <scielo-dev@googlegroups.com>
 
 ENV CLAMAV_VERSION 0.99
 
