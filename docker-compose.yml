@@ -7,12 +7,30 @@ volumes:
   inbox-django-static: {}
 
 services:
+  clamav:
+    build: ./compose/clamav
+    ports:
+      - "3310:3310"
+
   postgres:
     build: ./compose/postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - postgres_backup:/backups
     env_file: .env
+
+  redis:
+    image: redis:latest
+
+  nginx:
+    build: ./compose/nginx
+    depends_on:
+      - django
+    volumes:
+      - inbox-django-static:/static
+      - inbox-django-media:/media
+    ports:
+      - "0.0.0.0:80:80"
 
   django:
     build:
@@ -27,20 +45,6 @@ services:
       - redis
     command: /gunicorn.sh
     env_file: .env
-
-  nginx:
-    build: ./compose/nginx
-    depends_on:
-      - django
-    volumes:
-      - inbox-django-static:/static
-      - inbox-django-media:/media
-    ports:
-      - "0.0.0.0:80:80"
-
-
-  redis:
-    image: redis:latest
 
   celeryworker:
     build:
@@ -70,9 +74,3 @@ services:
       - redis
       - clamav
     command: celery -A inbox.taskapp beat -l INFO
-
-  clamav:
-    build: ./compose/clamav
-    ports:
-      - "3310:3310"
-

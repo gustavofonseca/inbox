@@ -1,6 +1,5 @@
 version: '2'
 
-
 services:
   postgres:
     build: ./compose/postgres
@@ -22,4 +21,3 @@ services:
     links:
       - postgres
       - redis
-

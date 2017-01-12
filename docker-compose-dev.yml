@@ -7,6 +7,11 @@ volumes:
   inbox-django-static: {}
 
 services:
+  clamav:
+    build: ./compose/clamav
+    ports:
+      - "3310:3310"
+
   postgres:
     build: ./compose/postgres
     volumes:
@@ -14,6 +19,9 @@ services:
       - postgres_backup_dev:/backups
     ports:
       - "5431:5432"
+
+  redis:
+    image: redis:latest
 
   django:
     build:
@@ -34,12 +42,6 @@ services:
     stdin_open: True
     tty: True
 
-  redis:
-    image: redis:latest
-
-# ------
-# Os serviços abaixo executam as tarefas assíncronas.
-# ------
   celeryworker:
     build:
       context: .
@@ -70,9 +72,3 @@ services:
       - .:/app
       - inbox-django-media:/app/media
     command: celery -A inbox.taskapp beat -l INFO
-
-  clamav:
-    build: ./compose/clamav
-    ports:
-      - "3310:3310"
-
