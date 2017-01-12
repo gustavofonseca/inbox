@@ -1,12 +1,13 @@
 FROM python:3.5
 
 ENV PYTHONUNBUFFERED 1
+MAINTAINER SciELO <scielo-dev@googlegroups.com>
 
-# Requirements have to be pulled and installed here, otherwise caching won't work
+RUN apt-get update \
+    && apt-get install -qqy apt-utils \
+    && apt-get install -qqy libxml2-utils
+
 COPY ./requirements /requirements
-
-RUN apt-get update && apt-get install -qqy apt-utils && apt-get install -qqy libxml2-utils
-
 RUN pip install -r /requirements/production.txt \
     && groupadd -r django \
     && useradd -r -g django django
@@ -29,6 +30,7 @@ RUN sed -i 's/\r//' /entrypoint.sh \
 
 VOLUME /app/media
 VOLUME /app/static
+
 WORKDIR /app
 
 USER django

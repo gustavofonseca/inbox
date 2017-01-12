@@ -1,5 +1,7 @@
 FROM postgres:9.5
 
+MAINTAINER SciELO <scielo-dev@googlegroups.com>
+
 # add backup scripts
 ADD backup.sh /usr/local/bin/backup
 ADD restore.sh /usr/local/bin/restore

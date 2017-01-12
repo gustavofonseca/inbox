@@ -1,76 +1,125 @@
 version: '2'
 
 volumes:
-  postgres_data: {}
-  postgres_backup: {}
+  inbox-postgres: {}
+  inbox-postgres-backup: {}
   inbox-django-media: {}
   inbox-django-static: {}
 
 services:
   clamav:
-    build: ./compose/clamav
+    image: scieloorg/inbox_clamav
     ports:
-      - "3310:3310"
+      - 3310/tcp
+    labels:
+      io.rancher.container.pull_image: always
 
   postgres:
-    build: ./compose/postgres
+    image: scieloorg/inbox_postgres
+    environment:
+      - POSTGRES_PASSWORD=your-value-here
+      - POSTGRES_USER=your-value-here
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - postgres_backup:/backups
-    env_file: .env
+      - inbox-postgres:/var/lib/postgresql/data
+      - inbox-postgres-backup:/backups
+    ports:
+      - 5432/tcp
+    labels:
+      io.rancher.container.pull_image: always
 
   redis:
     image: redis:latest
+    labels:
+      io.rancher.container.pull_image: always
 
   nginx:
-    build: ./compose/nginx
-    depends_on:
-      - django
+    image: scieloorg/inbox_nginx
     volumes:
       - inbox-django-static:/static
       - inbox-django-media:/media
+    links:
+      - django
     ports:
-      - "0.0.0.0:80:80"
+      - 80
 
   django:
-    build:
-      context: .
-      dockerfile: ./compose/django/Dockerfile
+    image: scieloorg/inbox
+    environment:
+      - CLAMAV_HOST=your-value-here
+      - CLAMAV_PORT=your-value-here
+      - DJANGO_ACCOUNT_ALLOW_REGISTRATION=your-value-here
+      - DJANGO_ADMIN_URL=your-value-here
+      - DJANGO_ALLOWED_HOSTS=your-value-here
+      - DJANGO_MAILGUN_API_KEY=your-value-here
+      - DJANGO_SECRET_KEY=your-value-here
+      - DJANGO_SECURE_SSL_REDIRECT=your-value-here
+      - DJANGO_SERVER_EMAIL=your-value-here
+      - DJANGO_SETTINGS_MODULE=your-value-here
+      - POSTGRES_PASSWORD=your-value-here
+      - POSTGRES_USER=your-value-here
+    ports:
+      - 5000/tcp
     user: django
-    volumes:
-      - inbox-django-static:/app/static
-      - inbox-django-media:/app/media
-    depends_on:
+    command:
+      - /gunicorn.sh
+    links:
       - postgres
-      - redis
-    command: /gunicorn.sh
-    env_file: .env
+    volumes:
+      - inbox-django-media:/app/media
+      - inbox-django-static:/app/static
+    labels:
+      io.rancher.container.pull_image: always
 
   celeryworker:
-    build:
-      context: .
-      dockerfile: ./compose/django/Dockerfile
-    user: django
-    env_file: .env
+    image: scieloorg/inbox
+    environment:
+      - CLAMAV_HOST:your-value-here
+      - CLAMAV_PORT=your-value-here
+      - DJANGO_ACCOUNT_ALLOW_REGISTRATION=your-value-here
+      - DJANGO_ADMIN_URL=your-value-here
+      - DJANGO_ALLOWED_HOSTS=your-value-here
+      - DJANGO_MAILGUN_API_KEY=your-value-here
+      - DJANGO_SECRET_KEY=your-value-here
+      - DJANGO_SECURE_SSL_REDIRECT=your-value-here
+      - DJANGO_SERVER_EMAIL=your-value-here
+      - DJANGO_SETTINGS_MODULE=your-value-here
+      - POSTGRES_PASSWORD=your-value-here
+      - POSTGRES_USER=your-value-here
     volumes:
       - inbox-django-media:/app/media
-    depends_on:
-     - postgres
-     - redis
-     - clamav
-    command: celery -A inbox.taskapp worker -l INFO
+    links:
+      - clamav:clamav
+      - redis:redis
+      - postgres:postgres
+    user: django
+    command:
+      - celery -A inbox.taskapp worker -l INFO
+    labels:
+      io.rancher.container.pull_image: always
 
   celerybeat:
-    build:
-      context: .
-      dockerfile: ./compose/django/Dockerfile
-    user: django
-    env_file: .env
+    image: scieloorg/inbox
+    environment:
+      - CLAMAV_HOST:your-value-here
+      - CLAMAV_PORT=your-value-here
+      - DJANGO_ACCOUNT_ALLOW_REGISTRATION=your-value-here
+      - DJANGO_ADMIN_URL=your-value-here
+      - DJANGO_ALLOWED_HOSTS=your-value-here
+      - DJANGO_MAILGUN_API_KEY=your-value-here
+      - DJANGO_SECRET_KEY=your-value-here
+      - DJANGO_SECURE_SSL_REDIRECT=your-value-here
+      - DJANGO_SERVER_EMAIL=your-value-here
+      - DJANGO_SETTINGS_MODULE=your-value-here
+      - POSTGRES_PASSWORD=your-value-here
+      - POSTGRES_USER=your-value-here
     volumes:
       - inbox-django-media:/app/media
-
-    depends_on:
-      - postgres
-      - redis
-      - clamav
-    command: celery -A inbox.taskapp beat -l INFO
+    links:
+      - clamav:clamav
+      - redis:redis
+      - postgres:postgres
+    user: django
+    command:
+      - celery -A inbox.taskapp beat -l INFO
+    labels:
+      io.rancher.container.pull_image: always
