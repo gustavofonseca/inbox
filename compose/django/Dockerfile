@@ -15,6 +15,7 @@ RUN mkdir -p /etc/xml \
     && bash -c "$(curl -fsSL https://raw.githubusercontent.com/scieloorg/packtools/master/scripts/install_xml_catalog.sh)"
 
 COPY . /app
+RUN mkdir /app/media /app/static
 RUN chown -R django /app
 
 COPY ./compose/django/gunicorn.sh /gunicorn.sh
@@ -26,7 +27,10 @@ RUN sed -i 's/\r//' /entrypoint.sh \
     && chmod +x /gunicorn.sh \
     && chown django /gunicorn.sh
 
-VOLUME /app/inbox/media
+VOLUME /app/media
+VOLUME /app/static
 WORKDIR /app
+
+USER django
 
 ENTRYPOINT ["/entrypoint.sh"]

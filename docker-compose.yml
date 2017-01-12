@@ -3,7 +3,8 @@ version: '2'
 volumes:
   postgres_data: {}
   postgres_backup: {}
-  django_media: {}
+  inbox-django-media: {}
+  inbox-django-static: {}
 
 services:
   postgres:
@@ -19,7 +20,8 @@ services:
       dockerfile: ./compose/django/Dockerfile
     user: django
     volumes:
-      - django_media:/app/inbox/media
+      - inbox-django-static:/app/static
+      - inbox-django-media:/app/media
     depends_on:
       - postgres
       - redis
@@ -30,7 +32,9 @@ services:
     build: ./compose/nginx
     depends_on:
       - django
-
+    volumes:
+      - inbox-django-static:/static
+      - inbox-django-media:/media
     ports:
       - "0.0.0.0:80:80"
 
@@ -44,6 +48,8 @@ services:
       dockerfile: ./compose/django/Dockerfile
     user: django
     env_file: .env
+    volumes:
+      - inbox-django-media:/app/media
     depends_on:
      - postgres
      - redis
@@ -56,6 +62,9 @@ services:
       dockerfile: ./compose/django/Dockerfile
     user: django
     env_file: .env
+    volumes:
+      - inbox-django-media:/app/media
+
     depends_on:
       - postgres
       - redis

@@ -3,7 +3,8 @@ version: '2'
 volumes:
   postgres_data_dev: {}
   postgres_backup_dev: {}
-  django_media: {}
+  inbox-django-media: {}
+  inbox-django-static: {}
 
 services:
   postgres:
@@ -26,7 +27,8 @@ services:
       - USE_DOCKER=yes
     volumes:
       - .:/app
-      - django_media:/app/inbox/media
+      - inbox-django-media:/app/media
+      - inbox-django-static:/app/static
     ports:
       - "8000:8000"
     stdin_open: True
@@ -51,7 +53,7 @@ services:
       - C_FORCE_ROOT=yes  # confirma a execução do celery como super-usuário
     volumes:
       - .:/app
-      - django_media:/app/inbox/media
+      - inbox-django-media:/app/media
     command: celery -A inbox.taskapp worker -l INFO
 
   celerybeat:
@@ -66,7 +68,7 @@ services:
       - USE_DOCKER=yes
     volumes:
       - .:/app
-      - django_media:/app/inbox/media
+      - inbox-django-media:/app/media
     command: celery -A inbox.taskapp beat -l INFO
 
   clamav:
