@@ -3,14 +3,12 @@ version: '2'
 volumes:
   inbox-postgres: {}
   inbox-postgres-backup: {}
-  inbox-django-media: {}
-  inbox-django-static: {}
 
 services:
   clamav:
     image: scieloorg/inbox_clamav
     ports:
-      - 3310/tcp
+      - 3310
     labels:
       io.rancher.container.pull_image: always
 
@@ -23,7 +21,7 @@ services:
       - inbox-postgres:/var/lib/postgresql/data
       - inbox-postgres-backup:/backups
     ports:
-      - 5432/tcp
+      - 5432
     labels:
       io.rancher.container.pull_image: always
 
@@ -35,12 +33,13 @@ services:
   nginx:
     image: scieloorg/inbox_nginx
     volumes:
-      - inbox-django-static:/static
-      - inbox-django-media:/media
+      - ~/inbox/media:/media
+    volumes_from:
+      - django
     links:
       - django
     ports:
-      - 80
+      - 80:80
 
   django:
     image: scieloorg/inbox
@@ -58,15 +57,14 @@ services:
       - POSTGRES_PASSWORD=your-value-here
       - POSTGRES_USER=your-value-here
     ports:
-      - 5000/tcp
+      - 5000
     user: django
     command:
       - /gunicorn.sh
     links:
       - postgres
     volumes:
-      - inbox-django-media:/app/media
-      - inbox-django-static:/app/static
+      - ~/inbox/media:/app/media
     labels:
       io.rancher.container.pull_image: always
 
@@ -86,7 +84,7 @@ services:
       - POSTGRES_PASSWORD=your-value-here
       - POSTGRES_USER=your-value-here
     volumes:
-      - inbox-django-media:/app/media
+      - ~/inbox/media:/app/media
     links:
       - clamav:clamav
       - redis:redis
@@ -113,7 +111,7 @@ services:
       - POSTGRES_PASSWORD=your-value-here
       - POSTGRES_USER=your-value-here
     volumes:
-      - inbox-django-media:/app/media
+      - ~/inbox/media:/app/media
     links:
       - clamav:clamav
       - redis:redis
