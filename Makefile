@@ -1,4 +1,3 @@
-
 start:
 	@docker-compose -f docker-compose-dev.yml up -d
 
@@ -6,7 +5,9 @@ stop:
 	@docker-compose -f docker-compose-dev.yml stop
 
 test:
-	@docker-compose -f docker-compose-dev.yml run --rm django python manage.py test --failfast
+	@docker-compose -f docker-compose-dev.yml run --rm \
+	-e DJANGO_SETTINGS_MODULE='config.settings.test' django \
+	python manage.py test --failfast
 
 status:
 	@docker-compose -f docker-compose-dev.yml ps
@@ -15,7 +16,8 @@ clean:
 	@docker-compose -f docker-compose-dev.yml rm
 
 shell:
-	@docker-compose -f docker-compose-dev.yml run --rm django python manage.py shell_plus
+	@docker-compose -f docker-compose-dev.yml run --rm django \
+	python manage.py shell_plus
 
 build:
 	@docker-compose -f docker-compose-dev.yml build
