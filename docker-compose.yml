@@ -57,6 +57,7 @@ services:
       - POSTGRES_PASSWORD=your-value-here
       - POSTGRES_USER=your-value-here
       - DJANGO_LOG_LEVEL=set-one-of-these-values-[debug,info,warning,error,critical]
+      - INBOX_SENTRY_DSN=your-value-here
     ports:
       - 5000
     user: django
