@@ -142,11 +142,10 @@ ADMIN_URL = env('DJANGO_ADMIN_URL')
 # Integration with Sentry's real time error tracking.
 _SENTRY_DSN = env('INBOX_SENTRY_DSN', default=None)
 if _SENTRY_DSN is not None:
-    import raven
     INSTALLED_APPS += ('raven.contrib.django.raven_compat',)
     RAVEN_CONFIG = {
         'dsn': _SENTRY_DSN,
-        # Automatically configure the release based on the git info.
-        'release': raven.fetch_git_sha(str(ROOT_DIR)),
+        # Configure the release based on the git info from VCS_REF env var.
+        'release': env('VCS_REF', default='Undefined'),
     }
 

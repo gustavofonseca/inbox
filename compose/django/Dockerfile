@@ -3,6 +3,9 @@ FROM python:3.5
 ENV PYTHONUNBUFFERED 1
 MAINTAINER SciELO <scielo-dev@googlegroups.com>
 
+ARG VCS_REF
+ENV VCS_REF ${VCS_REF}
+
 RUN apt-get update \
     && apt-get install -qqy apt-utils \
     && apt-get install -qqy libxml2-utils
