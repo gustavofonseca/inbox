@@ -83,7 +83,7 @@ def scan_file_for_viruses(file):
     """
     try:
         antivirus = pyclamd.ClamdNetworkSocket(
-                host=CLAMAV_HOST, port=CLAMAV_PORT)
+                host=CLAMAV_HOST, port=int(CLAMAV_PORT))
     except pyclamd.ConnectionError as exc:
         raise AntivirusConnectionError() from exc
 
