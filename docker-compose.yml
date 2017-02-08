@@ -44,8 +44,8 @@ services:
   django:
     image: scieloorg/inbox
     environment:
-      - CLAMAV_HOST=your-value-here
-      - CLAMAV_PORT=your-value-here
+      - INBOX_CLAMAV_HOST=your-value-here
+      - INBOX_CLAMAV_PORT=your-value-here
       - DJANGO_ACCOUNT_ALLOW_REGISTRATION=your-value-here
       - DJANGO_ADMIN_URL=your-value-here
       - DJANGO_ALLOWED_HOSTS=your-value-here
@@ -73,8 +73,8 @@ services:
   celeryworker:
     image: scieloorg/inbox
     environment:
-      - CLAMAV_HOST:your-value-here
-      - CLAMAV_PORT=your-value-here
+      - INBOX_CLAMAV_HOST:your-value-here
+      - INBOX_CLAMAV_PORT=your-value-here
       - DJANGO_ACCOUNT_ALLOW_REGISTRATION=your-value-here
       - DJANGO_ADMIN_URL=your-value-here
       - DJANGO_ALLOWED_HOSTS=your-value-here
@@ -100,8 +100,8 @@ services:
   celerybeat:
     image: scieloorg/inbox
     environment:
-      - CLAMAV_HOST:your-value-here
-      - CLAMAV_PORT=your-value-here
+      - INBOX_CLAMAV_HOST:your-value-here
+      - INBOX_CLAMAV_PORT=your-value-here
       - DJANGO_ACCOUNT_ALLOW_REGISTRATION=your-value-here
       - DJANGO_ADMIN_URL=your-value-here
       - DJANGO_ALLOWED_HOSTS=your-value-here
