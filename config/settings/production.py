@@ -146,6 +146,6 @@ if _SENTRY_DSN is not None:
     RAVEN_CONFIG = {
         'dsn': _SENTRY_DSN,
         # Configure the release based on the git info from VCS_REF env var.
-        'release': env('VCS_REF', default='Undefined'),
+        'release': VCS_REF,
     }
 

@@ -1,6 +1,7 @@
 {% load staticfiles i18n %}
 {% load humanize %}
 {% load frontdesk_extras %}
+{% load inbox_extras %}
 
 <!DOCTYPE html>
 <html>
@@ -60,7 +61,7 @@
       <!-- /.content-wrapper -->
       <footer class="main-footer">
         <div class="pull-right hidden-xs">
-          <b>Version</b> 0.1.0
+          <b>Versão</b> 0.1 {% app_build_ref "[" "]" %}
         </div>
         <strong>SciELO FrontDesk</strong>
       </footer>

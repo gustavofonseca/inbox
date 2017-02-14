@@ -45,6 +45,7 @@ THIRD_PARTY_APPS = (
 LOCAL_APPS = (
     # custom users app
     'inbox.users.apps.UsersConfig',
+    'inbox',
     'frontdesk',
 )
 
@@ -245,6 +246,9 @@ ADMIN_URL = r'^admin/'
 
 
 # Your common stuff: Below this line define 3rd party library settings
+# Referência ao HEAD do repositório
+VCS_REF = env('VCS_REF', default=None)
+
 # ClamAV Antivirus
 CLAMAV_HOST = env('INBOX_CLAMAV_HOST', default='clamav')
 CLAMAV_PORT = env.int('INBOX_CLAMAV_PORT', default=3310)
