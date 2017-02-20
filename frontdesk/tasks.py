@@ -2,6 +2,12 @@ import logging
 
 from django.db import transaction
 
+import packtools
+from packtools import (
+        stylechecker,
+        utils as packtools_utils,
+)
+
 from inbox.taskapp.celery import app
 from . import (
         models,
@@ -9,17 +15,6 @@ from . import (
         signals,
 )
 
-import packtools
-from packtools import (
-        stylechecker,
-        utils as packtools_utils,
-)
-
-from . import (
-        models,
-        utils,
-        signals,
-)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -59,13 +54,13 @@ def scan_package_for_viruses(self, package_id):
     except utils.AntivirusConnectionError as exc:
         self.retry(exc)
     except utils.AntivirusBufferTooLongError as exc:
-        scan_status = models.PACKAGE_VIRUSSCAN_STATUS_UNDETERMINED
+        scan_status = models.VirusScanStatus.UNDETERMINED
         scan_details = str(exc)
     else:
         if is_infected:
-            scan_status = models.PACKAGE_VIRUSSCAN_STATUS_INFECTED
+            scan_status = models.VirusScanStatus.INFECTED
         else:
-            scan_status = models.PACKAGE_VIRUSSCAN_STATUS_UNINFECTED
+            scan_status = models.VirusScanStatus.UNINFECTED
 
         scan_details = str(details)  # representação textual de uma tupla
 
@@ -119,9 +114,9 @@ def validate_package_member(member_id):
             summary = stylechecker.summarize(validator)
 
     if summary['is_valid']:
-        check_status = models.XMLMEMBER_SPS_STATUS_VALID
+        check_status = models.SPSStatus.VALID
     else:
-        check_status = models.XMLMEMBER_SPS_STATUS_INVALID
+        check_status = models.SPSStatus.INVALID
 
     models.XMLMemberControlAttrs.objects.create(
             member=member,

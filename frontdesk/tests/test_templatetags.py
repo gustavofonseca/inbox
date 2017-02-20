@@ -2,13 +2,7 @@ from unittest import TestCase
 
 from django.template import Template, Context
 
-from frontdesk.models import (
-        Package,
-        PACKAGE_VIRUSSCAN_STATUS_QUEUED,
-        PACKAGE_VIRUSSCAN_STATUS_UNDETERMINED,
-        PACKAGE_VIRUSSCAN_STATUS_INFECTED,
-        PACKAGE_VIRUSSCAN_STATUS_UNINFECTED,
-)
+from frontdesk import models
 from frontdesk.templatetags import frontdesk_extras as tags
 
 
@@ -261,24 +255,25 @@ class TemplatetagsTest(TestCase):
 
     def test_should_warn_before_downloading_queued(self):
         result = tags.should_warn_before_downloading(
-                PACKAGE_VIRUSSCAN_STATUS_QUEUED)
+                models.VirusScanStatus.QUEUED)
         self.assertTrue(result)
 
     def test_should_warn_before_downloading_undetermined(self):
         result = tags.should_warn_before_downloading(
-                PACKAGE_VIRUSSCAN_STATUS_UNDETERMINED)
+                models.VirusScanStatus.UNDETERMINED)
         self.assertTrue(result)
 
     def test_should_warn_before_downloading_infected(self):
         result = tags.should_warn_before_downloading(
-                PACKAGE_VIRUSSCAN_STATUS_INFECTED)
+                models.VirusScanStatus.INFECTED)
         self.assertTrue(result)
 
     def test_should_warn_before_downloading_uninfected(self):
         result = tags.should_warn_before_downloading(
-                PACKAGE_VIRUSSCAN_STATUS_UNINFECTED)
+                models.VirusScanStatus.UNINFECTED)
         self.assertFalse(result)
 
     def test_should_warn_before_downloading_unknown_status(self):
         self.assertRaises(ValueError,
-                          lambda: tags.should_warn_before_downloading(Package()))
+                          lambda: tags.should_warn_before_downloading(
+                              models.Package()))

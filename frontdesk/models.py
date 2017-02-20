@@ -14,13 +14,16 @@ from packtools import utils as packtools_utils
 from . import signals
 
 
-PACKAGE_VIRUSSCAN_STATUS_QUEUED = 'queued'
-PACKAGE_VIRUSSCAN_STATUS_UNDETERMINED = 'undetermined'
-PACKAGE_VIRUSSCAN_STATUS_INFECTED = 'infected'
-PACKAGE_VIRUSSCAN_STATUS_UNINFECTED = 'uninfected'
+class VirusScanStatus:
+    QUEUED = 'queued'
+    UNDETERMINED = 'undetermined'
+    INFECTED = 'infected'
+    UNINFECTED = 'uninfected'
 
-XMLMEMBER_SPS_STATUS_VALID = 'valid'
-XMLMEMBER_SPS_STATUS_INVALID = 'invalid'
+
+class SPSStatus:
+    VALID = 'valid'
+    INVALID = 'invalid'
 
 
 class Deposit(TimeStampedModel):
@@ -55,12 +58,12 @@ class Package(TimeStampedModel):
     status na verificação de vírus. São os atributos cujo identificador
     começa com ``virus_scan_``. Os status possíveis são representados pelas
     variáveis:
-      - models.PACKAGE_VIRUSSCAN_STATUS_QUEUED (verificação ainda pendente),
-      - models.PACKAGE_VIRUSSCAN_STATUS_UNDETERMINED (quando não foi possível
+      - models.VirusScanStatus.QUEUED (verificação ainda pendente),
+      - models.VirusScanStatus.UNDETERMINED (quando não foi possível
         verificar o pacote, por exemplo por exceder o tamanho máximo aceito
         pelo antivirus),
-      - models.PACKAGE_VIRUSSCAN_STATUS_INFECTED (o pacote está infectado),
-      - models.PACKAGE_VIRUSSCAN_STATUS_UNINFECTED (o pacote não está infectado).
+      - models.VirusScanStatus.INFECTED (o pacote está infectado),
+      - models.VirusScanStatus.UNINFECTED (o pacote não está infectado).
 
     A superclasse ``TimeStampedModel`` provê os atributos ``created`` e
     ``modified``, contendo a data e hora de criação e de modificação da
@@ -75,15 +78,15 @@ class Package(TimeStampedModel):
     md5_sum = models.CharField(max_length=32)  # 32 dígitos hexadecimais
 
     VIRUS_SCAN_STATUS = Choices(
-            PACKAGE_VIRUSSCAN_STATUS_QUEUED,
-            PACKAGE_VIRUSSCAN_STATUS_UNDETERMINED,
-            PACKAGE_VIRUSSCAN_STATUS_INFECTED,
-            PACKAGE_VIRUSSCAN_STATUS_UNINFECTED)
+            VirusScanStatus.QUEUED,
+            VirusScanStatus.UNDETERMINED,
+            VirusScanStatus.INFECTED,
+            VirusScanStatus.UNINFECTED)
     virus_scan_status = StatusField(choices_name='VIRUS_SCAN_STATUS')
     virus_scan_status_changed = MonitorField(monitor='virus_scan_status',
-            when=[PACKAGE_VIRUSSCAN_STATUS_UNDETERMINED,
-                  PACKAGE_VIRUSSCAN_STATUS_INFECTED,
-                  PACKAGE_VIRUSSCAN_STATUS_UNINFECTED])
+            when=[VirusScanStatus.UNDETERMINED,
+                  VirusScanStatus.INFECTED,
+                  VirusScanStatus.UNINFECTED])
     virus_scan_details = models.CharField(max_length=2048, default='')
 
     def xmls(self):
@@ -147,7 +150,7 @@ class PackageMember(models.Model):
         except XMLMemberControlAttrs.DoesNotExist:
             return (None, {})
         else:
-            if XMLMEMBER_SPS_STATUS_VALID == xmlattrs.sps_check_status:
+            if SPSStatus.VALID == xmlattrs.sps_check_status:
                 is_valid = True
             else:
                 is_valid = False
@@ -177,8 +180,8 @@ class XMLMemberControlAttrs(models.Model):
             related_name='xml_control_attrs')
 
     SPS_CHECK_STATUS = Choices(
-            XMLMEMBER_SPS_STATUS_VALID,
-            XMLMEMBER_SPS_STATUS_INVALID)
+            SPSStatus.VALID,
+            SPSStatus.INVALID)
     sps_check_status = StatusField(choices_name='SPS_CHECK_STATUS')
     sps_check_status_changed = MonitorField(monitor='sps_check_status')
     sps_check_details = JSONField()
