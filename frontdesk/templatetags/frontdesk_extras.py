@@ -1,12 +1,7 @@
 from django import template
 from django.template.defaultfilters import stringfilter
 
-from frontdesk.models import (
-        PACKAGE_VIRUSSCAN_STATUS_INFECTED,
-        PACKAGE_VIRUSSCAN_STATUS_UNINFECTED,
-        PACKAGE_VIRUSSCAN_STATUS_UNDETERMINED,
-        PACKAGE_VIRUSSCAN_STATUS_QUEUED,
-)
+from .. import models
 
 
 register = template.Library()
@@ -35,10 +30,10 @@ BOX_COLORS = {
 
 
 ACCEPTED_VIRUS_SCAN_STATUSES = [
-    PACKAGE_VIRUSSCAN_STATUS_UNINFECTED,
-    PACKAGE_VIRUSSCAN_STATUS_QUEUED,
-    PACKAGE_VIRUSSCAN_STATUS_UNDETERMINED,
-    PACKAGE_VIRUSSCAN_STATUS_INFECTED,
+    models.VirusScanStatus.UNINFECTED,
+    models.VirusScanStatus.QUEUED,
+    models.VirusScanStatus.UNDETERMINED,
+    models.VirusScanStatus.INFECTED,
 ]
 
 
@@ -109,7 +104,7 @@ def should_warn_before_downloading(virusscan_status):
     que ele não está infectado.
 
     Quando o status for igual a constante do
-    models.PACKAGE_VIRUSSCAN_STATUS_UNINFECTED ele retornará falso.
+    models.VirusScanStatus.UNINFECTED ele retornará falso.
     Não necessitando informar o usuário sobre a possibilidade de vírus no pacote.
 
     Este filtro foi projetado para auxiliar a confecção de templates,
@@ -125,7 +120,7 @@ def should_warn_before_downloading(virusscan_status):
     if virusscan_status not in ACCEPTED_VIRUS_SCAN_STATUSES:
         raise ValueError('Status not supported')
 
-    if virusscan_status == PACKAGE_VIRUSSCAN_STATUS_UNINFECTED:
+    if virusscan_status == models.VirusScanStatus.UNINFECTED:
         return False
 
     return True

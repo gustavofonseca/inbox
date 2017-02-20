@@ -29,7 +29,7 @@ class ValidatePackageMemberTests(TestCase):
         _ = tasks.validate_package_member(member.pk)
 
         self.assertTrue(member.xml_control_attrs.sps_check_status in
-                [models.XMLMEMBER_SPS_STATUS_VALID, models.XMLMEMBER_SPS_STATUS_INVALID])
+                [models.SPSStatus.VALID, models.SPSStatus.INVALID])
         self.assertIsInstance(member.xml_control_attrs.sps_check_details,
                 dict)
 
