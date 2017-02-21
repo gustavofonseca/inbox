@@ -14,6 +14,8 @@ from frontdesk import (
 _CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 SAMPLE_PACKAGE = os.path.join(
         _CURRENT_DIR, 'fixtures', '0004-2730-aem-60-4.zip')
+SAMPLE_PACKAGE_NOTWELLFORMED = os.path.join(
+        _CURRENT_DIR, 'fixtures', '0004-2730-aem-60-4.notwellformed.zip')
 
 
 class DepositFactory(factory.django.DjangoModelFactory):

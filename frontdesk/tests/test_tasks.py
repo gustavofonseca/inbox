@@ -45,3 +45,18 @@ class ValidatePackageMemberTests(TestCase):
         self.assertRaises(models.XMLMemberControlAttrs.DoesNotExist,
                 lambda: member.xml_control_attrs)
 
+    def test_xml_syntax_errors(self):
+        pack = modelfactories.PackageFactory.create(
+                file__from_file=open(
+                    modelfactories.SAMPLE_PACKAGE_NOTWELLFORMED, 'rb'),
+                file__filename='0004-2730-aem-60-4.zip')
+        member = modelfactories.PackageMemberFactory(
+                package=pack,
+                name='0004-2730-aem-60-4.notwellformed/0004-2730-aem-60-4-0407.xml')
+
+        _ = tasks.validate_package_member(member.pk)
+
+        self.assertEquals(member.xml_control_attrs.sps_check_status,
+                models.SPSStatus.INVALID)
+        self.assertEquals('XMLSyntaxError',
+                member.xml_control_attrs.sps_check_details['exception_type'])
