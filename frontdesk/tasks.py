@@ -2,6 +2,7 @@ import logging
 
 from django.db import transaction
 
+from lxml import etree
 import packtools
 from packtools import (
         stylechecker,
@@ -104,7 +105,7 @@ def validate_package_member(member_id):
     with member.open() as member_file:
         try:
             validator = packtools.XMLValidator.parse(member_file)
-        except packtools.exceptions.PacktoolsError as exc:
+        except (packtools.exceptions.PacktoolsError, etree.XMLSyntaxError) as exc:
             summary = {
                     'is_valid': False,
                     'exception_type': type(exc).__name__,
