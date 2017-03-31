@@ -4,6 +4,7 @@ import celery
 from django.db import models
 from django.dispatch import receiver
 from django.contrib.postgres.fields import JSONField
+from django.core.files.base import File
 
 from model_utils.models import TimeStampedModel
 from model_utils.fields import StatusField, MonitorField
@@ -12,6 +13,7 @@ from model_utils import Choices
 from packtools import utils as packtools_utils
 
 from . import signals
+from db import fields
 
 
 class VirusScanStatus:
@@ -171,6 +173,35 @@ class PackageMember(models.Model):
         """
         type, _ = mimetypes.guess_type(self.name, strict=False)
         return type
+
+
+def _make_file_path(instance, filename):
+    file_hash = instance.file.md5
+    return 'packages/members/{seg1}/{seg2}/{seg3}/{filename}'.format(
+            seg1=file_hash[:2], seg2=file_hash[2:4], seg3=file_hash[4:6],
+            filename=filename)
+
+
+class PackageMemberVersion(models.Model):
+    """Arquivo membro de ``Package`` em algum momento no tempo-espaço.
+    """
+    package_member = models.ForeignKey(PackageMember, on_delete=models.CASCADE,
+            related_name='versions')
+    file = fields.ChecksummedFileField(upload_to=_make_file_path,
+            max_length=1024)
+
+    @classmethod
+    def parse(cls, file):
+        """Produz uma instância de ``PackageMemberVersion`` com base em file.
+
+        :param file: objeto tipo arquivo.
+        """
+        package = cls()
+        package.file = File(file)
+        # o nome do arquivo será definido como o resultado da sua soma a fim
+        # de evitar conflitos.
+        package.file.name = package.file.sha256
+        return package
 
 
 class XMLMemberControlAttrs(models.Model):
