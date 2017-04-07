@@ -138,3 +138,37 @@ Por último o modo html que, como o nome sugere, apresenta o artigo formatado
 para que seja possível visualizar o artigo de maneira semelhante a que será
 publicado.
 
+
+Mensagens
+~~~~~~~~~
+Consiste de um ou mais parágrafos de texto, que pode ser formatado ou não,
+imagens e referências a qualquer arquivo (versão do membro do pacote), pacote
+ou depósito. As mensagens podem ser agrupadas em forma de diálogos e marcadas
+como resolvidas.
+
+
+Time de trabalho
+~~~~~~~~~~~~~~~~
+Agrupamento de usuários que depositam pacotes em nome de um único depositante,
+cujo time dá o nome. O time de trabalho deve possuir no mínimo 1 usuário
+afiliado, que será considerado dono do time. São permitidos multiplos donos
+em um mesmo time. Não são permitidos usuários desfiliados de times, assim como
+times sem afiliados.
+
+
+Fluxo de produção
+~~~~~~~~~~~~~~~~~
+
+
+Sistema de ingestão
+~~~~~~~~~~~~~~~~~~~
+
+
+Lista de verificação
+~~~~~~~~~~~~~~~~~~~~
+
+
+Métricas e estatísticas
+~~~~~~~~~~~~~~~~~~~~~~~
+
+
