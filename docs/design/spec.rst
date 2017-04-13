@@ -44,20 +44,20 @@ ser capazes de:
 * Designar artigos pendentes de validação para outros profissionais;
 * Gerenciar a lista de verificação (admin apenas);
 * Gerenciar usuários (admin apenas);
-* Gerenciar times de trabalho (admin apenas)
+* Gerenciar times de trabalho (admin apenas);
 * Convidar usuário a se registrar no sistema como dono de time de trabalho;
 * Visualizar métricas e estatísticas das suas interações com o sistema de
   ingestão e outras estatísticas avançadas;
 
 
 Depósito
-~~~~~~~~
+````````
 O depósito de um pacote SciELO PS para ingresso na coleção.
 
 Possui os atributos: (1) número de protocolo relacionado, que deve ser único na
 instalação, (2) nome do time de trabalho responsável pelo depósito, (3) data
 e hora do depósito, e (4) estado em que se encontra em relação ao fluxo de
-ingestão.
+produção.
 
 Os estados possíveis são: depositado, em processo, concluído e
 rejeitado.
@@ -67,7 +67,7 @@ de um pacote de artigos.
 
 
 Pacote
-~~~~~~
+``````
 Pacote depositado para inclusão na coleção.
 
 É basicamente um maço, zipado, de arquivos XML e seus respectivos ativos
@@ -78,7 +78,7 @@ novas versões dos já existentes.
 
 
 Membro do pacote
-~~~~~~~~~~~~~~~~
+````````````````
 Representa a existência de um arquivo no pacote, independentemente da sua
 versão, e está vinculado a uma quantidade arbitrária de versões do membro do
 pacote.
@@ -87,7 +87,7 @@ Possui o atributo nome, que armazena um texto referente ao nome do arquivo.
 
 
 Versão do membro do pacote
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+``````````````````````````
 Representa uma versão do arquivo membro do pacote. As versões são ordenadas
 com base na sua data e hora de criação.
 
@@ -96,7 +96,7 @@ aqui, sendo necessária a criação de novas versões.
 
 
 Artigo
-~~~~~~
+``````
 Representa um conjunto de membros de um pacote, interrelacionados, que
 formam um único artigo/trabalho científico/documento/unidade publicável.
 
@@ -105,7 +105,7 @@ vinculados (Ativo do artigo).
 
 
 Conteúdo do artigo
-~~~~~~~~~~~~~~~~~~
+``````````````````
 É um membro do pacote que representa um artigo codificado em XML de acordo
 com a especificação SciELO PS.
 
@@ -113,7 +113,7 @@ Especializa o tipo de entidade Membro do pacote.
 
 
 Ativo do artigo
-~~~~~~~~~~~~~~~
+```````````````
 É um membro do pacote que representa um arquivo parte do Artigo, referenciado
 no conteúdo do artigo ou não.
 
@@ -121,7 +121,7 @@ São exemplos: imagens, pdf, planilhas, multimídia.
 
 
 Visualização do Artigo
-~~~~~~~~~~~~~~~~~~~~~~
+``````````````````````
 Os artigos podem ser visualizados de maneiras distintas, permitindo que
 os usuários alternem entre os modos: (1) código fonte, (2) galeria e (3) html.
 
@@ -140,7 +140,7 @@ publicado.
 
 
 Mensagens
-~~~~~~~~~
+`````````
 Consiste de um ou mais parágrafos de texto, que pode ser formatado ou não,
 imagens e referências a qualquer arquivo (versão do membro do pacote), pacote
 ou depósito. As mensagens podem ser agrupadas em forma de diálogos e marcadas
@@ -148,7 +148,7 @@ como resolvidas.
 
 
 Time de trabalho
-~~~~~~~~~~~~~~~~
+````````````````
 Agrupamento de usuários que depositam pacotes em nome de um único depositante,
 cujo time dá o nome. O time de trabalho deve possuir no mínimo 1 usuário
 afiliado, que será considerado dono do time. São permitidos multiplos donos
@@ -156,19 +156,37 @@ em um mesmo time. Não são permitidos usuários desfiliados de times, assim com
 times sem afiliados.
 
 
-Fluxo de produção
-~~~~~~~~~~~~~~~~~
+Fluxo de produção/recebimento
+`````````````````````````````
+Sequência pré definida de atividades que objetivam garantir a qualidade
+dos Artigos recebidos, por meio de validações automáticas e manuais, e
+preparar o ambiente para o processo de arquivamento.
+
+1. Verificação de estrutura e conteúdo (checklist fluxebimento);
+2. Arquivamento.
 
 
 Sistema de ingestão
-~~~~~~~~~~~~~~~~~~~
+```````````````````
+Conjunto de entidades interligadas e interdependentes que cooperam em favor de
+de um objetivo que é a ingestão de conteúdos.
 
 
 Lista de verificação
-~~~~~~~~~~~~~~~~~~~~
+````````````````````
+Hoje chamada de *checklist fluxebimento*, trata-se de uma lista dos pontos
+a serem verificados a fim de garantir a qualidade mínima necessária para que o
+conteúdo seja aceito. A lista é composta por verificações de integridade e
+consistência que podem variar de acordo com as políticas e critérios de cada
+coleção.
 
 
-Métricas e estatísticas
-~~~~~~~~~~~~~~~~~~~~~~~
+Métricas, estatísticas e relatórios
+```````````````````````````````````
 
+1. Média de tempo de um artigo no fluxo de recebimento;
+2. Número de problemas encontrados nos artigos, por editora/prestador;
+3. Adoção da versão mais recente da SciELO PS;
+4. Tamanho médio dos artigos (em KBytes);
+5. Fascículos em atraso;
 
