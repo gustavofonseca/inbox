@@ -156,8 +156,8 @@ em um mesmo time. Não são permitidos usuários desfiliados de times, assim com
 times sem afiliados.
 
 
-Fluxo de produção/recebimento
-`````````````````````````````
+Fluxo de recebimento
+````````````````````
 Sequência pré definida de atividades que objetivam garantir a qualidade
 dos Artigos recebidos, por meio de validações automáticas e manuais, e
 preparar o ambiente para o processo de arquivamento.
@@ -189,4 +189,66 @@ Métricas, estatísticas e relatórios
 3. Adoção da versão mais recente da SciELO PS;
 4. Tamanho médio dos artigos (em KBytes);
 5. Fascículos em atraso;
+
+
+Subsistemas
+-----------
+
+* Subsistema de depósito: encapsula o processo de depósito de um pacote;
+    * Subsistema de artigos: encapsula a representação de um Artigo;
+    * Subsistema de validações: encapsula o fluxo de recebimento;
+    * Subsistema de mensagens: encapsula o mecanismo de troca de mensagens;
+* Subsistema de visualização: encapsula a capacidade de produzir multiplas
+  visualizações de um Artigo;
+* Subsistema de arquivamento: define o modelo de dados em que os Artigos serão
+  arquivados. Algo parecido com a Title Manager e o SciELO Manager;
+* Subsistema de usuários: encapsula a estrutura e gestão dos times e usuários;
+
+
+Classes candidatas
+------------------
+
+Aqui os nomes das classes começam a ser escritos em inglês a fim de estabelecer
+termos e identificadores que serão utilizados na implementação.
+
+
+Subsistema de artigos:
+
+    * Article
+    * XML Data
+    * Asset
+        * Image Asset
+        * Video Asset
+        * Audio Asset
+        * External Link Asset
+
+
+Subsistema de validações:
+
+    * Validation
+        * Manual Validation
+        * Automatic Validation
+
+
+Subsistema de mensagens:
+
+    * Messages Thread
+    * Message
+        * Email Message
+        * Plain Message
+
+
+Subsistema de visualização:
+
+    * View
+        * Source Code View
+        * Gallery View
+        * HTML View
+    * Metadata
+        * Asset Metadata
+            * Exif Metadata
+            * XMP Metadata
+            * IPTC Metadata
+        * XML File Metadata (encoding, size, sps version, jats version)
+
 
