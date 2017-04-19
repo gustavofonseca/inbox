@@ -52,7 +52,8 @@ ser capazes de:
 
 Depósito
 ````````
-O depósito de um pacote SciELO PS para ingresso na coleção.
+O ponto de entrada de um pacote SciELO PS na coleção. Representa tanto a ação
+quanto o objeto depositado.
 
 Possui os atributos: (1) número de protocolo relacionado, que deve ser único na
 instalação, (2) nome do time de trabalho responsável pelo depósito, (3) data
@@ -212,43 +213,84 @@ Aqui os nomes das classes começam a ser escritos em inglês a fim de estabelece
 termos e identificadores que serão utilizados na implementação.
 
 
+Subsistema de depósitos:
+
+* Deposit
+* Package
+* Package Member
+* Package Member Version
+
+
 Subsistema de artigos:
 
-    * Article
-    * XML Data
-    * Asset
-        * Image Asset
-        * Video Asset
-        * Audio Asset
-        * External Link Asset
+* Article (XML Data is an attribute)
+* Asset
+    * Image Asset
+    * Video Asset
+    * Audio Asset
+    * External Link Asset
 
 
 Subsistema de validações:
 
-    * Validation
-        * Manual Validation
-        * Automatic Validation
+* Validation
+    * Manual Validation
+    * Automatic Validation
+* Workflow
+* Checklist
+* Checkpoint
 
 
 Subsistema de mensagens:
 
-    * Messages Thread
-    * Message
-        * Email Message
-        * Plain Message
+* Issue
+* Comment
+    * Email Comment
+    * Plain Comment
+* Attachment
 
 
 Subsistema de visualização:
 
-    * View
-        * Source Code View
-        * Gallery View
-        * HTML View
-    * Metadata
-        * Asset Metadata
-            * Exif Metadata
-            * XMP Metadata
-            * IPTC Metadata
-        * XML File Metadata (encoding, size, sps version, jats version)
+* View
+    * Source Code View
+    * Gallery View
+    * HTML View
+* Metadata
+    * Asset Metadata
+        * Exif Metadata
+        * XMP Metadata
+        * IPTC Metadata
+    * XML File Metadata (encoding, size, sps version, jats version)
 
+
+Subsistema de arquivamento:
+
+* Collection
+* Journal
+* Issue
+    * Regular Issue
+    * Special Issue
+    * Supplement Issue
+* Article
+    * Bound Article
+    * Ahead-of-print Article
+
+
+Subsistema de usuários:
+
+* Team
+* User
+    * QA Analyst
+    * Depositor
+* FTP Manager
+* FTP Account
+
+
+Anotações
+---------
+* Entidades do tipo Collection são responsáveis por saber as políticas e critérios
+  de aceite de conteúdo para suas respectivas coleções.
+* O fluxo de trabalho é global para a instância ou pode variar de acordo com a
+  coleção? Eu sugiro que seja único, pelo menos na primeira versão.
 
