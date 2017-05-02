@@ -7,6 +7,21 @@ sistema baseado na web, para operação via computadores de mesa ou tablets
 com tela superior a 10 polegadas. Deve ser acessível para a operação por
 pessoas com deficiência visual (em algum grau).
 
+Esse sistema incorpora responsabilidades que hoje estão distribuídas entre os
+programas PTS, Title Manager, Converter e SciELO Manager, e o fluxo de trabalho
+descrito no `Guia de Fluxebimento <https://drive.google.com/open?id=1ATdXOjQcEWL43wsTyjuGIrC9MAz6P2GwKLwCwt46PQc>`_
+e `Check list - Fluxebimento <https://drive.google.com/open?id=1x9CLuDafl9zdqObHlHqITxZ-nCiuf49bXAeYAjXtImY>`_
+(ambos os links possuem acesso restrito aos usuários @scielo.org). Essas
+responsabilidades são:
+
+* Controlar o recebimento de artigos registrando a data, a hora, o nome do
+  depositante, nome do responsável e quais os artigos recebidos (PTS);
+* Registrar o lote ou fascículo (PTS);
+* Gerenciar dados do periódico e fascículo (Title/SciELO Manager);
+* Intermediar toda a comunicação entre o analista de qualidade e o depositante
+  (e-mails);
+* Arquivar o conteúdo (Converter);
+
 
 Requisitos
 ----------
@@ -52,13 +67,17 @@ ser capazes de:
 
 Depósito
 ````````
-O ponto de entrada de um pacote SciELO PS na coleção. Representa tanto a ação
+É o ponto de entrada de um pacote SciELO PS na coleção. Representa tanto a ação
 quanto o objeto depositado.
 
-Possui os atributos: (1) número de protocolo relacionado, que deve ser único na
-instalação, (2) nome do time de trabalho responsável pelo depósito, (3) data
-e hora do depósito, e (4) estado em que se encontra em relação ao fluxo de
-produção.
+O depositante receberá um número de protocolo referente ao depósito, que poderá
+ser utilizado para consultar o estado em que o depósito se encontra em relação
+ao fluxo de recebimento.
+
+Possui minimamente os atributos: (1) número de protocolo relacionado, que deve
+ser único na instalação, (2) nome do time de trabalho responsável pelo
+depósito, (3) data e hora do depósito, e (4) estado em que se encontra em
+relação ao fluxo de produção.
 
 Os estados possíveis são: depositado, em processo, concluído e
 rejeitado.
@@ -73,6 +92,10 @@ Pacote depositado para inclusão na coleção.
 
 É basicamente um maço, zipado, de arquivos XML e seus respectivos ativos
 digitais, incluindo PDF.
+
+Pode ser que no pacote existam arquivos não referenciados por nenhum dos
+XML presentes. Nesses casos, deverá haver uma intervenção manual por parte do
+analista de qualidade indicando a qual Artigo o arquivo errante está relacionado.
 
 Um pacote é uma estrutura aberta que pode receber novos membros inéditos ou
 novas versões dos já existentes.
@@ -101,16 +124,14 @@ Artigo
 Representa um conjunto de membros de um pacote, interrelacionados, que
 formam um único artigo/trabalho científico/documento/unidade publicável.
 
-É formado por Conteúdo do artigo (XML SciELO PS) e todos os seus arquivos
-vinculados (Ativo do artigo).
+É formado pelo conteúdo do artigo -- codificado em XML SciELO PS -- e todos os
+seus arquivos vinculados (Ativo do artigo).
 
 
 Conteúdo do artigo
 ``````````````````
 É um membro do pacote que representa um artigo codificado em XML de acordo
 com a especificação SciELO PS.
-
-Especializa o tipo de entidade Membro do pacote.
 
 
 Ativo do artigo
@@ -140,12 +161,12 @@ para que seja possível visualizar o artigo de maneira semelhante a que será
 publicado.
 
 
-Mensagens
-`````````
+Comentários
+```````````
 Consiste de um ou mais parágrafos de texto, que pode ser formatado ou não,
 imagens e referências a qualquer arquivo (versão do membro do pacote), pacote
-ou depósito. As mensagens podem ser agrupadas em forma de diálogos e marcadas
-como resolvidas.
+ou depósito. Os comentários podem ser agrupados em forma de diálogos e marcados
+como resolvidos.
 
 
 Time de trabalho
@@ -198,7 +219,8 @@ Subsistemas
 * Subsistema de depósito: encapsula o processo de depósito de um pacote;
     * Subsistema de artigos: encapsula a representação de um Artigo;
     * Subsistema de validações: encapsula o fluxo de recebimento;
-    * Subsistema de mensagens: encapsula o mecanismo de troca de mensagens;
+    * Subsistema de comentários: encapsula o mecanismo de troca de mensagens
+      sobre determinado ponto a ser resolvido;
 * Subsistema de visualização: encapsula a capacidade de produzir multiplas
   visualizações de um Artigo;
 * Subsistema de arquivamento: define o modelo de dados em que os Artigos serão
@@ -241,7 +263,7 @@ Subsistema de validações:
 * Checkpoint
 
 
-Subsistema de mensagens:
+Subsistema de comentários:
 
 * Issue
 * Comment
@@ -288,9 +310,48 @@ Subsistema de usuários:
 
 
 Anotações
----------
+`````````
+
 * Entidades do tipo Collection são responsáveis por saber as políticas e critérios
   de aceite de conteúdo para suas respectivas coleções.
 * O fluxo de trabalho é global para a instância ou pode variar de acordo com a
   coleção? Eu sugiro que seja único, pelo menos na primeira versão.
+
+
+Atributos de qualidade
+----------------------
+
+**Pendente**
+
+* **Desempenho**  (latência e vazão/throughput);
+* **Escalabilidade**  (volume de dados e tráfego);
+* **Disponibilidade**  (tempo disponível, tempo indisponível, 24x7, 99,9%);
+* **Segurança**  (autenticação, autorização, confidencialidade dos dados);
+* **Extensibilidade**  (novas funcionalidades, plugins);
+* **Flexibilidade**  (capacidade de ser usado para coisas não previstas);
+* **Auditoria**;
+* **Monitoramento**;
+* **Confiabilidade**;
+* **Resiliência**  (failover/disaster recovery, manual vs automatic);
+* **Interoperabilidade**;
+* **I18n e L10n**;
+* **Acessibilidade**;
+* **Usabilidade**;
+
+
+Restrições
+----------
+
+**Pendente**
+
+* **Prazo**;
+* **Orçamento**;
+* **Tamanho da equipe de desenvolvimento**;
+* **Plataformas de implantação**: Ubuntu, CentOS, contêineres Docker, Windows(?);
+* **Hardware**;
+* **Integração com sistemas pré-existentes**: OPAC, OPAC-PROC, ArticleMeta;
+* **Tecnologias de IPC**: gRPC, Apache Thrift, Restful API;
+* **Licenciamento**: preferencialmente BSD 2-clause, mas outras licenças livres
+  poderão ser avaliadas;
+
 
