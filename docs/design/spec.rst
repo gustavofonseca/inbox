@@ -323,6 +323,25 @@ Atributos de qualidade
 
 **Pendente**
 
+Diversas aplicações - *Cited-by*, *Production*, *Bibliometria*, *Ratchet*,
+*Search* entre outras - tem como input os metadados dos artigos, e por vezes o
+seu conteúdo. A tolerância a dados desatualizados varia de acordo com políticas
+individuais, entretanto é desejável que a Inbox garanta a consistência
+(Cada leitura recebe a mais recente escrita ou um erro).
+
+A fim de prover uma margem de segurança em relação à capacidade operacional do
+sistema, os atributos de qualidade que tratam do volume transacional ou outros
+aspectos de capacidade devem ter seu valor multiplicado pelo *coeficiente de
+escala* de valor `10`.
+
+Com base num total de 1190 novos artigos por dia (190 * coeficiente de escala),
+podemos realizar o seguinte cálculo:
+`total_de_clientes * 0,04 artigos por segundo * 200.000 bytes por XML *
+1 sentido => total_de_clientes * 8300 bytes/segundo`; Isso significa que para
+140 aplicações o tráfego será de `9,3 Mbps`, apenas para o tráfego dos
+metadados e texto completo.
+
+
 * **Desempenho**  (latência e vazão/throughput);
 * **Escalabilidade**  (volume de dados e tráfego);
 * **Disponibilidade**  (tempo disponível, tempo indisponível, 24x7, 99,9%);
