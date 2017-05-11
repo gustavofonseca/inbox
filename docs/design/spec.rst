@@ -323,6 +323,31 @@ Atributos de qualidade
 
 **Pendente**
 
+Antes de qualquer coisa alguns dados operacionais e estimativas:
+
+* Uma pessoa proficiente no Markup e SciELO PS leva em média **50 minutos** para
+  produzir um artigo padrão (com cerca de 20 referências e tabelas simples);
+* Essa mesma pessoa pode produzir até **9 artigos em XML por dia**;
+* A SciELO processa aproximadamente **190 artigos por dia**;
+* São necessárias aproximadamente **22** pessoas proficientes no Markup e
+  SciELO PS para gerar a demanda de processamento diário da SciELO;
+* Com base nos dados do ano de 2016, onde foram processados **24384 artigos** e
+  **2502 pacotes**, um pacote possui em média **9,75 artigos**.
+
+Questões em aberto:
+
+* Qual é o tamanho médio e o máximo, em Bytes, dos pacotes recebidos?
+* Qual é a incidência de arquivos repetidos em pacotes e entre pacotes?
+  O que isso representa em relação ao total de arquivos armazenados?
+* Qual é a finalidade de armazenar os arquivos de
+  ``NASSHARE/wrk/fbpe/periodicos``?
+* Quantas pessoas interagem diariamente com o fluxo de recebimento?
+  R: 31? (22 prestadores + 9 SciELO).
+
+
+----
+
+
 Diversas aplicações - *Cited-by*, *Production*, *Bibliometria*, *Ratchet*,
 *Search* entre outras - tem como input os metadados dos artigos, e por vezes o
 seu conteúdo. A tolerância a dados desatualizados varia de acordo com políticas
@@ -332,14 +357,20 @@ individuais, entretanto é desejável que a Inbox garanta a consistência
 A fim de prover uma margem de segurança em relação à capacidade operacional do
 sistema, os atributos de qualidade que tratam do volume transacional ou outros
 aspectos de capacidade devem ter seu valor multiplicado pelo *coeficiente de
-escala* de valor `10`.
+escala* de valor ``10``.
 
 Com base num total de 1190 novos artigos por dia (190 * coeficiente de escala),
 podemos realizar o seguinte cálculo:
-`total_de_clientes * 0,04 artigos por segundo * 200.000 bytes por XML *
-1 sentido => total_de_clientes * 8300 bytes/segundo`; Isso significa que para
-140 aplicações o tráfego será de `9,3 Mbps`, apenas para o tráfego dos
-metadados e texto completo.
+``total_de_clientes * 0,04 artigos por segundo * 200.000 bytes por XML *
+1 sentido => total_de_clientes * 8300 bytes/segundo``; Isso significa que em um
+cenário onde existem 140 aplicações consumindo XMLs dos novos artigos publicados
+, de forma "online", o tráfego será de aproximadamente ``9,3 Mbps`` (apenas
+metadados e texto completo), ou ``266,5Gb por dia``.
+
+Atualmente -- em 11/05/2017 -- constam ``22`` empresas na lista de prestadores
+de serviço em SciELO Brasil que enviam conteúdos para a SciELO Brasil.
+Desses, 21 enviam conteúdos por meio de servidor FTP operado pela SciELO, e 1
+opera seu próprio servidor FTP onde somos nós os responsáveis pela coleta.
 
 
 * **Desempenho**  (latência e vazão/throughput);
